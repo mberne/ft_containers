@@ -119,7 +119,7 @@
 #include <string>
 #include <stdlib.h>
 
-// #include "vector.hpp"
+#include "vector.hpp"
 #include <vector>
 
 int main() {

@@ -6,7 +6,8 @@
 # include <memory>
 # include "iterator.hpp"
 
-namespace ft {
+namespace ft
+{
 	template < class T, class Alloc = std::allocator<T> >
 	class vector {
 		public:
@@ -16,10 +17,10 @@ namespace ft {
 			typedef typename allocator_type::const_reference						const_reference;
 			typedef typename allocator_type::pointer								pointer;
 			typedef typename allocator_type::const_pointer							const_pointer;
-			typedef typename ft::__normal_iterator<reference, pointer>				iterator;
-			typedef typename ft::__normal_iterator<const_reference, const_pointer>	const_iterator;
-			typedef typename reverse_iterator<iterator>								reverse_iterator;
-			typedef typename reverse_iterator<const_iterator>						const_reverse_iterator;
+			typedef typename ft::vector_iterator<pointer>							iterator;
+			typedef typename ft::vector_iterator<const_pointer>						const_iterator;
+			typedef typename ft::reverse_iterator<iterator>							reverse_iterator;
+			typedef typename ft::reverse_iterator<const_iterator>					const_reverse_iterator;
 			typedef ptrdiff_t														difference_type;
 			typedef size_t															size_type;
 

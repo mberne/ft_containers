@@ -22,7 +22,7 @@ OBJS		=		$(addprefix $(PATH_OBJ), $(SRCS:.cpp=.o))
 
 #~~~~ Includes ~~~~#
 
-INCS		=		$(addprefix $(PATH_INC), iterator.hpp reverse_iterator.hpp iterators_traits.hpp)
+INCS		=		$(addprefix $(PATH_INC), iterator.hpp iterator_traits.hpp reverse_iterator.hpp)
 
 #~~~~ Macros ~~~~#
 
