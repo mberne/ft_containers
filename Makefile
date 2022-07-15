@@ -39,7 +39,7 @@ RM			=		rm -rf
 all :				$(NAME)
 
 $(NAME) :			$(OBJS)
-					$(CC) $(CFLAGS) $(OBJS) -o $(NAME) -I $(PATH_INC)
+					$(CC) $(CFLAGS) $(OBJS) -o $(NAME) -I$(PATH_INC)
 
 re :				fclean all
 
@@ -47,7 +47,7 @@ re :				fclean all
 
 $(PATH_OBJ)%.o :	%.cpp $(INCS)
 					@mkdir -p $(dir $@);
-					$(CC) $(CFLAGS) -c $< -o $@ -I $(PATH_INC)
+					$(CC) $(CFLAGS) -c $< -o $@ -I$(PATH_INC)
 
 #~~~~ Cleaning Rules ~~~~#
 
