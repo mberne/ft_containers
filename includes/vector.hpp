@@ -24,11 +24,11 @@ namespace ft
 				typedef ptrdiff_t														difference_type;
 				typedef size_t															size_type;
 
-			private:
+			protected:
 
-				allocator_type	__allocator_;
-				pointer			__begin_;
-				pointer			__end_;
+				allocator_type	allocator;
+				pointer			begin;
+				pointer			end;
 
 			public:
 
@@ -36,10 +36,8 @@ namespace ft
 
 				explicit vector (const allocator_type& alloc = allocator_type());
 				explicit vector (size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type()); // appelle assign()
-
 				template <class InputIterator>
 					vector (InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type()); // appelle assign()
-
 				vector(const vector &x);
 
 	// Destructor
@@ -52,18 +50,18 @@ namespace ft
 
 	// Iterators
 
-				iterator begin()						{ return iterator(__begin_); }
-				const_iterator begin() const			{ return const_iterator(__begin_); }
-				iterator end()							{ return iterator(__end_); }
-				const_iterator end() const				{ return const_iterator(__begin_); }
-				reverse_iterator rbegin()				{ return reverse_iterator(iterator(__end_)); }
-				const_reverse_iterator rbegin() const	{ return const_reverse_iterator(const_iterator(__end_)); }
-				reverse_iterator rend()					{ return reverse_iterator(iterator(__begin_)); }
-				const_reverse_iterator rend() const		{ return const_reverse_iterator(const_iterator(__begin_)); }
+				// iterator begin()						{ return iterator(begin); }
+				// const_iterator begin() const			{ return const_iterator(begin); }
+				// iterator end()							{ return iterator(end); }
+				// const_iterator end() const				{ return const_iterator(end); }
+				// reverse_iterator rbegin()				{ return reverse_iterator(iterator(end)); }
+				// const_reverse_iterator rbegin() const	{ return const_reverse_iterator(const_iterator(end)); }
+				// reverse_iterator rend()					{ return reverse_iterator(iterator(begin)); }
+				// const_reverse_iterator rend() const		{ return const_reverse_iterator(const_iterator(begin)); }
 
 	// Capacity
 
-				size_type size() const;
+				size_type size() const { return static_cast<size_type>(end - begin); };
 				size_type max_size() const;
 				void resize (size_type n, value_type val = value_type());
 				size_type capacity() const;
@@ -85,25 +83,21 @@ namespace ft
 
 				template <class InputIterator>
 					void assign (InputIterator first, InputIterator last);
-				
 				void assign (size_type n, const value_type& val);
 				void push_back (const value_type& val);
 				void pop_back();
 				iterator insert (iterator position, const value_type& val);	
 				void insert (iterator position, size_type n, const value_type& val);
-
 				template <class InputIterator>
 					void insert (iterator position, InputIterator first, InputIterator last);
-
 				iterator erase (iterator position);
 				iterator erase (iterator first, iterator last);
 				void swap (vector& x);
 				void clear();
 
-				// Allocator
+	// Allocator
 
 				allocator_type get_allocator() const;
-
 		};
 
 	// Non member functions overload

@@ -10,10 +10,7 @@ namespace ft
 			static constexpr T				value = v;
 			typedef T						value_type;
 			typedef integral_constant<T,v>	type;
-			constexpr operator T()
-			{
-				return v;
-			}
+			constexpr operator T()			{ return v; }
 		};
 
 	typedef integral_constant<bool, true>	true_type;
@@ -54,28 +51,16 @@ namespace ft
 
 
 	template<class T>
-		struct remove_cv
-		{
-			typedef T type;
-		};
+		struct remove_cv { typedef T type; };
 	template<class T>
-		struct remove_cv<const T>
-		{
-			typedef T type;
-		};
+		struct remove_cv<const T> { typedef T type; };
 	template<class T>
-		struct remove_cv<volatile T>
-		{
-			typedef T type;
-		};
+		struct remove_cv<volatile T> { typedef T type; };
 	template<class T>
-		struct remove_cv<const volatile T>
-		{
-			typedef T type;
-		};
+		struct remove_cv<const volatile T> { typedef T type; };
 
-	template <T>
-		struct is_integral : public is_integral_check< remove_cv<T> >::type
+	template <class T>
+		struct is_integral : public is_integral_check< remove_cv<T> >::type {};
 }
 
 #endif
