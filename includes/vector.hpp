@@ -26,38 +26,63 @@ namespace ft
 
 			protected:
 
-				allocator_type	allocator;
-				pointer			begin;
-				pointer			end;
+				allocator_type	_allocator;
+				pointer			_begin;
+				pointer			_end;
+				size_type		_size;
 
 			public:
 
 	// Constructors
 
-				explicit vector (const allocator_type& alloc = allocator_type());
-				explicit vector (size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type()); // appelle assign()
+				explicit vector (const allocator_type& alloc = allocator_type()) : _allocator(alloc), _begin(nullptr), _end(nullptr), _size(0) {}
+				explicit vector (size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type()) : _allocator(alloc), _size(n) {
+					_begin = _allocator.allocate(n);
+					for (size_type i = 0, i < n, ++i)
+						_allocator.construct(_begin + i, val);
+					_end = _begin + n;
+				}
 				template <class InputIterator>
-					vector (InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type()); // appelle assign()
-				vector(const vector &x);
+					vector (InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type()) : _allocator(alloc) {} // ?
+				vector(const vector &x) {
+					_allocator = x._allocator;
+					_size = x._size;
+					_begin = _allocator.allocate(_size);
+					for (size_type i = 0, i < _size, ++i)
+						_allocator.construct(_begin + i, x[i]);
+					_end = _begin + _size;
+				}
 
 	// Destructor
 
-				~vector();
+				~vector() {
+					for (size_type i = 0, i < _size, ++i)
+						_allocator.destroy(_begin + i);
+					_allocator.deallocate(_begin, _size);
+				}
 
 	// Operator =
 
-				vector	&operator=(vector const &x);
+				vector	&operator=(vector const &x) {
+					for (size_type i = 0, i < _size, ++i)
+						_allocator.destroy(_begin + i);
+					_allocator.deallocate(_begin, _size);
+					_size = x._size();
+					_begin = _allocator.allocate(_size);
+					for (size_type i = 0, i < _size, ++i)
+						_allocator.construct(_begin + i, x[i]);
+				}
 
 	// Iterators
 
-				// iterator begin()						{ return iterator(begin); }
-				// const_iterator begin() const			{ return const_iterator(begin); }
-				// iterator end()							{ return iterator(end); }
-				// const_iterator end() const				{ return const_iterator(end); }
-				// reverse_iterator rbegin()				{ return reverse_iterator(iterator(end)); }
-				// const_reverse_iterator rbegin() const	{ return const_reverse_iterator(const_iterator(end)); }
-				// reverse_iterator rend()					{ return reverse_iterator(iterator(begin)); }
-				// const_reverse_iterator rend() const		{ return const_reverse_iterator(const_iterator(begin)); }
+				iterator begin()						{ return iterator(_begin); }
+				const_iterator begin() const			{ return const_iterator(_begin); }
+				iterator end()							{ return iterator(_end); }
+				const_iterator end() const				{ return const_iterator(_end); }
+				reverse_iterator rbegin()				{ return reverse_iterator(iterator(_end)); }
+				const_reverse_iterator rbegin() const	{ return const_reverse_iterator(const_iterator(_end)); }
+				reverse_iterator rend()					{ return reverse_iterator(iterator(_begin)); }
+				const_reverse_iterator rend() const		{ return const_reverse_iterator(const_iterator(_begin)); }
 
 	// Capacity
 
