@@ -35,10 +35,10 @@ namespace ft
 
 	// Constructors
 
-				explicit vector (const allocator_type& alloc = allocator_type()) : _allocator(alloc), _begin(nullptr), _end(nullptr), _size(0) {}
+				explicit vector (const allocator_type& alloc = allocator_type()) : _allocator(alloc), _begin(NULL), _end(NULL), _size(0) {}
 				explicit vector (size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type()) : _allocator(alloc), _size(n) {
 					_begin = _allocator.allocate(n);
-					for (size_type i = 0, i < n, ++i)
+					for (size_type i = 0; i < n; ++i)
 						_allocator.construct(_begin + i, val);
 					_end = _begin + n;
 				}
@@ -48,7 +48,7 @@ namespace ft
 					_allocator = x._allocator;
 					_size = x._size;
 					_begin = _allocator.allocate(_size);
-					for (size_type i = 0, i < _size, ++i)
+					for (size_type i = 0; i < _size; ++i)
 						_allocator.construct(_begin + i, x[i]);
 					_end = _begin + _size;
 				}
@@ -56,7 +56,7 @@ namespace ft
 	// Destructor
 
 				~vector() {
-					for (size_type i = 0, i < _size, ++i)
+					for (size_type i = 0; i < _size; ++i)
 						_allocator.destroy(_begin + i);
 					_allocator.deallocate(_begin, _size);
 				}
@@ -64,12 +64,12 @@ namespace ft
 	// Operator =
 
 				vector	&operator=(vector const &x) {
-					for (size_type i = 0, i < _size, ++i)
+					for (size_type i = 0; i < _size; ++i)
 						_allocator.destroy(_begin + i);
 					_allocator.deallocate(_begin, _size);
 					_size = x._size();
 					_begin = _allocator.allocate(_size);
-					for (size_type i = 0, i < _size, ++i)
+					for (size_type i = 0; i < _size; ++i)
 						_allocator.construct(_begin + i, x[i]);
 				}
 
