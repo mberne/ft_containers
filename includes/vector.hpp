@@ -30,13 +30,14 @@ namespace ft
 				pointer			_begin;
 				pointer			_end;
 				size_type		_size;
+				size_type		_capacity;
 
 			public:
 
 	// Constructors
 
-				explicit vector (const allocator_type& alloc = allocator_type()) : _allocator(alloc), _begin(NULL), _end(NULL), _size(0) {}
-				explicit vector (size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type()) : _allocator(alloc), _size(n) {
+				explicit vector (const allocator_type& alloc = allocator_type()) : _allocator(alloc), _begin(NULL), _end(NULL), _size(0), _capacity(0) {}
+				explicit vector (size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type()) : _allocator(alloc), _size(n), _capacity(n) {
 					_begin = _allocator.allocate(n);
 					for (size_type i = 0; i < n; ++i)
 						_allocator.construct(_begin + i, val);
@@ -47,7 +48,8 @@ namespace ft
 				vector(const vector &x) {
 					_allocator = x._allocator;
 					_size = x._size;
-					_begin = _allocator.allocate(_size);
+					_capacity = x.capacity;
+					_begin = _allocator.allocate(_capacity);
 					for (size_type i = 0; i < _size; ++i)
 						_allocator.construct(_begin + i, x[i]);
 					_end = _begin + _size;
@@ -58,7 +60,7 @@ namespace ft
 				~vector() {
 					for (size_type i = 0; i < _size; ++i)
 						_allocator.destroy(_begin + i);
-					_allocator.deallocate(_begin, _size);
+					_allocator.deallocate(_begin, _capacity);
 				}
 
 	// Operator =
@@ -66,9 +68,10 @@ namespace ft
 				vector	&operator=(vector const &x) {
 					for (size_type i = 0; i < _size; ++i)
 						_allocator.destroy(_begin + i);
-					_allocator.deallocate(_begin, _size);
-					_size = x._size();
-					_begin = _allocator.allocate(_size);
+					_allocator.deallocate(_begin, _capacity);
+					_size = x._size;
+					_capacity = x._capacity;
+					_begin = _allocator.allocate(_capacity);
 					for (size_type i = 0; i < _size; ++i)
 						_allocator.construct(_begin + i, x[i]);
 				}
@@ -86,12 +89,34 @@ namespace ft
 
 	// Capacity
 
-				size_type size() const { return static_cast<size_type>(end - begin); };
-				size_type max_size() const;
-				void resize (size_type n, value_type val = value_type());
-				size_type capacity() const;
-				bool empty() const;
-				void reserve (size_type n);
+				size_type size() const										{ return _size; }
+				size_type max_size() const									{ return _allocator.max_size(); }
+				void resize (size_type n, value_type val = value_type())	{
+					value_type	value = 0;
+					if (n < _size)
+					{
+						for (size_type i = 0; i < _size - n; ++i)
+							_allocator.destroy(_begin + n + i);
+						_allocator.deallocate(_begin + _size, _size - n);
+						_size = n;
+						_end = begin + _size;
+					}
+					else if (n > _size)
+					{
+						_begin = _allocator.allocate(n - _size, _begin);
+						if (val)
+							for (size_type i = 0; i < n - _size; ++i)
+								_allocator.construct(_end + i, val);
+						_size = n;
+						_end = begin + _size;
+					}
+				}
+				size_type capacity() const									{ return _capacity; }
+				bool empty() const											{ return _size == 0; }
+				void reserve (size_type n)									{
+					if (n > _capacity)
+						_begin = _allocator.allocate(n - _capacity, _begin);
+				}
 
 	// Element access
 
