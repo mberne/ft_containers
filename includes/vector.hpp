@@ -142,22 +142,64 @@ namespace ft
 	// Modifiers
 
 				template <class InputIterator>
-					void assign (InputIterator first, InputIterator last);
-				void assign (size_type n, const value_type& val);
-				void push_back (const value_type& val);
-				void pop_back();
-				iterator insert (iterator position, const value_type& val);	
-				void insert (iterator position, size_type n, const value_type& val);
+					void assign (InputIterator first, InputIterator last) {
+						for (size_type i = 0; i < _size; ++i)
+							_allocator.destroy(_begin + i);
+						if (last - first > _size)
+							_reallocate(last - first);
+						// remplir le vecteur avec les iterateurs
+					}
+				void assign (size_type n, const value_type& val) {
+					for (size_type i = 0; i < _size; ++i)
+						_allocator.destroy(_begin + i);
+					if (n > _size)
+						_reallocate(n);
+					for (size_type i = 0; i < _size; ++i)
+						_allocator.construct(_begin + i, val);
+				}
+				void push_back (const value_type& val) {
+					if (_size == _capacity)
+					{
+						// reallouer en gardant les valeurs (_size = _size + 1 etc)
+					}
+					_allocator.construct(_end, val);
+				}
+				void pop_back() {
+					_allocator.destroy(_end);
+					--_size;
+					--_end;
+				}
+				iterator insert (iterator position, const value_type& val);	//
+				void insert (iterator position, size_type n, const value_type& val); //
 				template <class InputIterator>
-					void insert (iterator position, InputIterator first, InputIterator last);
-				iterator erase (iterator position);
-				iterator erase (iterator first, iterator last);
-				void swap (vector& x);
-				void clear();
+					void insert (iterator position, InputIterator first, InputIterator last); //
+				iterator erase (iterator position); //
+				iterator erase (iterator first, iterator last); //
+				void swap (vector& x); //
+				void clear() {
+					for (size_type i = 0; i < _size; ++i)
+						_allocator.destroy(_begin + i);
+					_size = 0;
+				}
 
 	// Allocator
 
-				allocator_type get_allocator() const { return _allocator; }
+				allocator_type	get_allocator() const { return _allocator; }
+
+			protected :
+
+				void	_reallocate(size_type n) {
+					_allocator.deallocate(_begin, _size);
+					_size = n;
+					_begin = _allocator.allocate(_size);
+					_end = _begin + _size;
+					_capacity = _size;
+				}
+
+				void	_reallocate_with_save(size_type n) {
+					//
+				}
+
 		};
 
 	// Non member functions overload
