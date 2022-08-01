@@ -120,14 +120,22 @@ namespace ft
 
 	// Element access
 
-				reference operator[] (size_type n);
-				const_reference operator[] (size_type n) const;
-				reference at (size_type n);
-				const_reference at (size_type n) const;
-				reference front();
-				const_reference front() const;
-				reference back();
-				const_reference back() const;
+				reference operator[] (size_type n)				{ return _begin + n; }
+				const_reference operator[] (size_type n) const	{ return _begin + n; }
+				reference at (size_type n)						{
+					if (n >= _size)
+						throw std::out_of_range("vector");
+					return _begin + n;
+				}
+				const_reference at (size_type n) const			{
+					if (n >= _size)
+						throw std::out_of_range("vector");
+					return _begin + n;
+				}
+				reference front()								{ return *_begin; }
+				const_reference front() const					{ return *_begin; }
+				reference back()								{ return *_end; }
+				const_reference back() const					{ return *_end; }
 
 	// Modifiers
 
