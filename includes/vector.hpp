@@ -157,7 +157,7 @@ namespace ft
 
 	// Allocator
 
-				allocator_type get_allocator() const;
+				allocator_type get_allocator() const { return _allocator; }
 		};
 
 	// Non member functions overload
@@ -175,7 +175,7 @@ namespace ft
 	template <class T, class Alloc>
 		bool operator>= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)	{ return !(lhs < rhs); }
 	template <class T, class Alloc>
-		void swap (vector<T,Alloc>& x, vector<T,Alloc>& y);
+		void swap (vector<T,Alloc>& x, vector<T,Alloc>& y)							{ x.swap(y); }
 }
 
 #endif
