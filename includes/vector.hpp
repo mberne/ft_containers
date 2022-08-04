@@ -112,7 +112,21 @@ namespace ft
 				bool empty() const											{ return _size == 0; }
 				void reserve (size_type n)									{
 					if (n > _capacity)
-						_begin = _allocator.allocate(n - _capacity, _begin);
+					{
+						if (n > max_size)
+							throw std::length_error("you tried to exceed maximum supported size");
+						else
+						{
+							pointer tmp = _allocator.allocate(n);
+							for (size_type i = 0; i < _size; ++i)
+								_allocator.construct(tmp + i, _begin[i]);
+							for (size_type i = 0; i < _size; ++i)
+								_allocator.destroy(_begin + i);
+							_allocator.deallocate(_begin, _capacity);
+							_begin = tmp;
+							_capacity = n;
+						}
+					}
 				}
 
 	// Element access
@@ -155,7 +169,7 @@ namespace ft
 				void push_back (const value_type& val) {
 					if (_size == _capacity)
 					{
-						// reallouer en gardant les valeurs (_size = _size + 1 etc)
+						// reallouer en gardant les valeurs
 					}
 					_allocator.construct(_begin + _size, val);
 				}
