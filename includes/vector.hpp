@@ -65,14 +65,12 @@ namespace ft
 				~vector() {
 					for (size_type i = 0; i < _size; ++i)
 						_allocator.destroy(_begin + i);
-					// _allocator.deallocate(_begin, _capacity);
 				}
 
 	// Operator =
 
 				vector	&operator=(vector const &x) {
-					for (size_type i = 0; i < _size; ++i)
-						_allocator.destroy(_begin + i);
+					clear();
 					_allocator.deallocate(_begin, _capacity);
 					_size = x._size;
 					_capacity = x._capacity;
@@ -169,7 +167,7 @@ namespace ft
 				}
 				void push_back (const value_type& val) {
 					if (_size == _capacity)
-						_reallocate_with_save(_size * 2);
+						_reallocate_with_save(_size);
 					_allocator.construct(_begin + _size, val);
 					++_size;
 				}
@@ -203,11 +201,12 @@ namespace ft
 
 				void	_reallocate(size_type n) {
 					_allocator.deallocate(_begin, _capacity);
-					_capacity = n;
+					_capacity = n * 2;
 					_begin = _allocator.allocate(_capacity);
 				}
 
 				void	_reallocate_with_save(size_type n) {
+					n *= 2;
 					pointer tmp = _allocator.allocate(n);
 					for (size_type i = 0; i < _size; ++i)
 						_allocator.construct(tmp + i, _begin[i]);
