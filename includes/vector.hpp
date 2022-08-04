@@ -124,7 +124,7 @@ namespace ft
 						if (n > max_size)
 							throw std::length_error("you tried to exceed maximum supported size");
 						else
-							_reallocate_with_save(n)
+							_reallocate_with_save(n);
 					}
 				}
 
@@ -157,7 +157,7 @@ namespace ft
 							_reallocate(last - first);
 						_size = last - first;
 						for (size_type i = 0; i < _size; ++i)
-							_allocator.construct(_begin + i, first[i])
+							_allocator.construct(_begin + i, first[i]);
 					}
 				void assign (size_type n, const value_type& val) {
 					for (size_type i = 0; i < _size; ++i)
@@ -183,7 +183,12 @@ namespace ft
 				// 	void insert (iterator position, InputIterator first, InputIterator last);
 				// iterator erase (iterator position);
 				// iterator erase (iterator first, iterator last);
-				// void swap (vector& x);
+				void swap (vector& x) {
+					std::swap(_allocator, x._allocator);
+					std::swap(_begin, x._begin);
+					std::swap(_size, x._size);
+					std::swap(_capacity, x._capacity);
+				}
 				void clear() {
 					for (size_type i = 0; i < _size; ++i)
 						_allocator.destroy(_begin + i);
