@@ -30,7 +30,6 @@ namespace ft
 
 				allocator_type	_allocator;
 				pointer			_begin;
-				pointer			_end;
 				size_type		_size;
 				size_type		_capacity;
 
@@ -38,12 +37,11 @@ namespace ft
 
 	// Constructors
 
-				explicit vector (const allocator_type& alloc = allocator_type()) : _allocator(alloc), _begin(NULL), _end(NULL), _size(0), _capacity(0) {}
+				explicit vector (const allocator_type& alloc = allocator_type()) : _allocator(alloc), _begin(NULL), _size(0), _capacity(0) {}
 				explicit vector (size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type()) : _allocator(alloc), _size(n), _capacity(n) {
 					_begin = _allocator.allocate(n);
 					for (size_type i = 0; i < n; ++i)
 						_allocator.construct(_begin + i, val);
-					_end = _begin + n;
 				}
 				template <class InputIterator>
 					vector (InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type()) : _allocator(alloc) {} // ?
@@ -54,7 +52,6 @@ namespace ft
 					_begin = _allocator.allocate(_capacity);
 					for (size_type i = 0; i < _size; ++i)
 						_allocator.construct(_begin + i, x[i]);
-					_end = _begin + _size;
 				}
 
 	// Destructor
@@ -82,10 +79,10 @@ namespace ft
 
 				iterator begin()						{ return iterator(_begin); }
 				const_iterator begin() const			{ return const_iterator(_begin); }
-				iterator end()							{ return iterator(_end); }
-				const_iterator end() const				{ return const_iterator(_end); }
-				reverse_iterator rbegin()				{ return reverse_iterator(iterator(_end)); }
-				const_reverse_iterator rbegin() const	{ return const_reverse_iterator(const_iterator(_end)); }
+				iterator end()							{ return iterator(_begin + _size); }
+				const_iterator end() const				{ return const_iterator(_begin + _size); }
+				reverse_iterator rbegin()				{ return reverse_iterator(iterator(_begin + _size)); }
+				const_reverse_iterator rbegin() const	{ return const_reverse_iterator(const_iterator(_begin + _size)); }
 				reverse_iterator rend()					{ return reverse_iterator(iterator(_begin)); }
 				const_reverse_iterator rend() const		{ return const_reverse_iterator(const_iterator(_begin)); }
 
@@ -101,16 +98,14 @@ namespace ft
 							_allocator.destroy(_begin + n + i);
 						_allocator.deallocate(_begin + _size, _size - n);
 						_size = n;
-						_end = begin + _size;
 					}
 					else if (n > _size)
 					{
 						_begin = _allocator.allocate(n - _size, _begin);
 						if (val)
 							for (size_type i = 0; i < n - _size; ++i)
-								_allocator.construct(_end + i, val);
+								_allocator.construct(_begin + _size + i, val);
 						_size = n;
-						_end = begin + _size;
 					}
 				}
 				size_type capacity() const									{ return _capacity; }
@@ -136,8 +131,8 @@ namespace ft
 				}
 				reference front()								{ return *_begin; }
 				const_reference front() const					{ return *_begin; }
-				reference back()								{ return *_end; }
-				const_reference back() const					{ return *_end; }
+				reference back()								{ return *(_begin + _size); }
+				const_reference back() const					{ return *(_begin + _size); }
 
 	// Modifiers
 
@@ -162,12 +157,11 @@ namespace ft
 					{
 						// reallouer en gardant les valeurs (_size = _size + 1 etc)
 					}
-					_allocator.construct(_end, val);
+					_allocator.construct(_begin + _size, val);
 				}
 				void pop_back() {
-					_allocator.destroy(_end);
+					_allocator.destroy(_begin + _size);
 					--_size;
-					--_end;
 				}
 				iterator insert (iterator position, const value_type& val);	//
 				void insert (iterator position, size_type n, const value_type& val); //
@@ -192,7 +186,6 @@ namespace ft
 					_allocator.deallocate(_begin, _size);
 					_size = n;
 					_begin = _allocator.allocate(_size);
-					_end = _begin + _size;
 					_capacity = _size;
 				}
 
