@@ -8,7 +8,6 @@ NAME		=		mycontainers
 
 #~~~~ Paths ~~~~#
 
-VPATH		=		srcs/
 PATH_OBJ	=		objs/
 PATH_INC	=		includes/
 

@@ -65,6 +65,7 @@ namespace ft
 				~vector() {
 					for (size_type i = 0; i < _size; ++i)
 						_allocator.destroy(_begin + i);
+					_allocator.deallocate(_begin, _capacity);
 				}
 
 	// Operator =

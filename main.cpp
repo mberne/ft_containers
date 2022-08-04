@@ -1,16 +1,16 @@
-// #include <iostream>
-// #include <string>
-// #include <deque>
-// #if 1 //CREATE A REAL STL EXAMPLE
-// 	#include <map>
-// 	#include <stack>
-// 	#include <vector>
-// 	namespace ft = std;
-// #else
-// 	#include <map.hpp>
-// 	#include <stack.hpp>
-// 	#include <vector.hpp>
-// #endif
+#include <iostream>
+#include <string>
+#include <deque>
+#if 1 //CREATE A REAL STL EXAMPLE
+	#include <map>
+	#include <stack>
+	#include <vector>
+	namespace ft = std;
+#else
+	#include <map.hpp>
+	#include <stack.hpp>
+	#include <vector.hpp>
+#endif
 
 // #include <stdlib.h>
 
@@ -115,27 +115,26 @@
 // 	return (0);
 // }
 
-#include <iostream>
-#include <string>
-#include <stdlib.h>
+int main()
+{
+	std::cout << "----------Vector----------" << std::endl;
 
-#include "vector.hpp"
-#include <vector>
+	ft::vector<std::string>	str_vector;
+	str_vector.push_back("Bonjour !");
+	str_vector.push_back("Comment ça va ?");
+	str_vector.push_back("Il marche bien ton vecteur ?");
+	str_vector.push_back("Moi il est ni-quel.");
+	for(size_t i = 0; i < str_vector.size(); i++)
+		std::cout << str_vector.at(i) << std::endl;
 
-int main() {
-	std::vector<int> vector(10, 42);
-	for(size_t i = 0; i < 10; i++)
-		std::cout << vector[i] << std::endl;
-	
-	std::vector<int>::iterator it = vector.begin();
-	*it = 5;
+	ft::vector<int> int_vector(10, 42);
+	for(size_t i = 0; i < int_vector.size(); i++)
+	{
+		std::cout << "[] version : " << int_vector[i] << std::endl;
+		std::cout << "at version : " << int_vector.at(i) << std::endl;
+	}
 
-	// ft::vector<int> vector1;
-	// ft::vector<int> vector2(10, 42);
-	// ft::vector<int> vector3(second.begin(), second.end());
-	// ft::vector<int> vector4(vector2);
-	// std::vector<int> vector1;
-	// std::vector<int> vector2(10, 42);
-	// std::vector<int> vector3(second.begin(), second.end());
-	// std::vector<int> vector4(vector2);
+	std::cout << "----------Map----------" << std::endl;
+
+	std::cout << "----------Stack----------" << std::endl;
 }
