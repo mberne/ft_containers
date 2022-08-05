@@ -19,36 +19,36 @@ namespace ft
 
 	template <class T>
 		struct is_integral_check : public false_type {};
-	template <bool T>
-		struct is_integral_check : public true_type {};
-	template <char T>
-		struct is_integral_check : public true_type {};
-	template <char16_t T>
-		struct is_integral_check : public true_type {};
-	template <char32_t T>
-		struct is_integral_check : public true_type {};
-	template <wchar_t T>
-		struct is_integral_check : public true_type {};
-	template <signed char T>
-		struct is_integral_check : public true_type {};
-	template <short int T>
-		struct is_integral_check : public true_type {};
-	template <int T>
-		struct is_integral_check : public true_type {};
-	template <long int T>
-		struct is_integral_check : public true_type {};
-	template <long long int T>
-		struct is_integral_check : public true_type {};
-	template <unsigned char T>
-		struct is_integral_check : public true_type {};
-	template <unsigned short int T>
-		struct is_integral_check : public true_type {};
-	template <unsigned int T>
-		struct is_integral_check : public true_type {};
-	template <unsigned long int T>
-		struct is_integral_check : public true_type {};
-	template <unsigned long long int T>
-		struct is_integral_check : public true_type {};
+	template <>
+		struct is_integral_check<bool> : public true_type {};
+	template <>
+		struct is_integral_check<char> : public true_type {};
+	// template <>
+	// 	struct is_integral_check<char16_t> : public true_type {};
+	// template <>
+	// 	struct is_integral_check<char32_t> : public true_type {};
+	template <>
+		struct is_integral_check<wchar_t> : public true_type {};
+	template <>
+		struct is_integral_check<signed char> : public true_type {};
+	template <>
+		struct is_integral_check<short int> : public true_type {};
+	template <>
+		struct is_integral_check<int> : public true_type {};
+	template <>
+		struct is_integral_check<long int> : public true_type {};
+	template <>
+		struct is_integral_check<long long int> : public true_type {};
+	template <>
+		struct is_integral_check<unsigned char> : public true_type {};
+	template <>
+		struct is_integral_check<unsigned short int> : public true_type {};
+	template <>
+		struct is_integral_check<unsigned int> : public true_type {};
+	template <>
+		struct is_integral_check<unsigned long int> : public true_type {};
+	template <>
+		struct is_integral_check<unsigned long long int> : public true_type {};
 
 
 	template<class T>

@@ -46,10 +46,10 @@ namespace ft
 						_allocator.construct(_begin + i, val);
 				}
 				template <class InputIterator>
-					vector (InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type(), typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type = NULL) : _allocator(alloc), _size(last - first), _capacity(_size) {
+					vector (InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type(), typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type* = NULL) : _allocator(alloc), _size(last - first), _capacity(_size) {
 						_begin = _allocator.allocate(_size);
 						for (size_type i = 0; i < _size; ++i)
-							_allocator.construct(_begin + i, first[i]);
+							_allocator.construct(_begin + i, *first++);
 					}
 				vector(const vector &x) {
 					_allocator = x._allocator;
@@ -129,17 +129,17 @@ namespace ft
 
 	// Element access
 
-				reference operator[] (size_type n)				{ return _begin + n; }
-				const_reference operator[] (size_type n) const	{ return _begin + n; }
+				reference operator[] (size_type n)				{ return *(_begin + n); }
+				const_reference operator[] (size_type n) const	{ return *(_begin + n); }
 				reference at (size_type n)						{
 					if (n >= _size)
 						throw std::out_of_range("you tried to exceed memory not allocated");
-					return _begin + n;
+					return *(_begin + n);
 				}
 				const_reference at (size_type n) const			{
 					if (n >= _size)
 						throw std::out_of_range("you tried to exceed memory not allocated");
-					return _begin + n;
+					return *(_begin + n);
 				}
 				reference front()								{ return *_begin; }
 				const_reference front() const					{ return *_begin; }
@@ -149,14 +149,14 @@ namespace ft
 	// Modifiers
 
 				template <class InputIterator>
-					void assign (InputIterator first, InputIterator last) {
+					void assign (InputIterator first, InputIterator last, typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type* = NULL) {
 						for (size_type i = 0; i < _size; ++i)
 							_allocator.destroy(_begin + i);
 						if (last - first > _capacity)
 							_reallocate(last - first);
 						_size = last - first;
 						for (size_type i = 0; i < _size; ++i)
-							_allocator.construct(_begin + i, first[i]);
+							_allocator.construct(_begin + i, *first++);
 					}
 				void assign (size_type n, const value_type& val) {
 					for (size_type i = 0; i < _size; ++i)
