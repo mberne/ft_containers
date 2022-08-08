@@ -120,7 +120,7 @@ namespace ft
 				void reserve (size_type n)									{
 					if (n > _capacity)
 					{
-						if (n > max_size)
+						if (n > max_size())
 							throw std::length_error("you tried to exceed maximum supported size");
 						else
 							_reallocate_with_save(n);
