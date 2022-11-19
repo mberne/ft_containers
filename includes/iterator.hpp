@@ -7,8 +7,6 @@
 
 namespace ft
 {
-	struct random_access_iterator_tag {};
-
 	template<typename T>
 		class vector_iterator
 		{
@@ -26,7 +24,9 @@ namespace ft
 			// Constructors
 
 				vector_iterator() {}
-				vector_iterator(vector_iterator const &src) : current(src.current) {}
+				vector_iterator(const T &src) : current(src) {}
+				// template<typename T2>
+    			// 	vector_iterator(const vector_iterator<T2>& src) : current(src.base()) {}
 
 			// Destructor
 
