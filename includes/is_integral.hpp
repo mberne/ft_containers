@@ -61,7 +61,7 @@ namespace ft
 		struct remove_cv<const volatile T> { typedef T type; };
 
 	template <class T>
-		struct is_integral : public is_integral_check< remove_cv<T> >::type {};
+		struct is_integral : public is_integral_check<typename ft::remove_cv<T>::type >::type {};
 }
 
 #endif

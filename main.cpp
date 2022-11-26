@@ -190,16 +190,15 @@ int main()
 
 	std::cout << "Test clear." << std::endl;
 	
-	// marche po wtf
-	// int_vector.clear();
-	// for(size_t i = 0; i < int_vector.size(); i++)
-	// 	std::cout << int_vector[i] << std::endl;
-	// std::cout << "int_vector size : " << int_vector.size() << std::endl;
-	// std::cout << "int_vector capacity : " << int_vector.capacity() << std::endl;
-	// if (int_vector.empty())
-	// 	std::cout << "int_vector is empty." << std::endl;
-	// else
-	// 	std::cout << "int_vector isn't empty." << std::endl;
+	int_vector.clear();
+	for(size_t i = 0; i < int_vector.size(); i++)
+		std::cout << int_vector[i] << std::endl;
+	std::cout << "int_vector size : " << int_vector.size() << std::endl;
+	std::cout << "int_vector capacity : " << int_vector.capacity() << std::endl;
+	if (int_vector.empty())
+		std::cout << "int_vector is empty." << std::endl;
+	else
+		std::cout << "int_vector isn't empty." << std::endl;
 
 	std::cout << "Modify int_vector and create another." << std::endl;
 
@@ -248,11 +247,11 @@ int main()
 	for(size_t i = 0; i < int_vector.size(); i++)
 		std::cout << int_vector[i] << std::endl;
 
-	// std::cout << "Insert multiple elements." << std::endl;
+	std::cout << "Insert multiple elements." << std::endl;
 
-	// int_vector.insert(int_vector.begin() + 3, 5, 0);
-	// for(size_t i = 0; i < int_vector.size(); i++)
-	// 	std::cout << int_vector[i] << std::endl;
+	int_vector.insert(int_vector.begin() + 3, 5, 0);
+	for(size_t i = 0; i < int_vector.size(); i++)
+		std::cout << int_vector[i] << std::endl;
 
 	std::cout << "Create str vector." << std::endl;
 
@@ -275,24 +274,24 @@ int main()
 	for(it = str_vector_2.begin(); it < str_vector_2.end(); ++it)
 		std::cout << *it << std::endl;
 
-	// std::cout << "Insert and erase with iterators." << std::endl;
+	std::cout << "Insert and erase with iterators." << std::endl;
 
-	// str_vector.insert(str_vector.begin() + 2, str_vector_2.begin(), str_vector_2.end());
-	// for(it = str_vector.begin(); it < str_vector.end(); ++it)
-	// 	std::cout << *it << std::endl;
-	// str_vector_2.erase(str_vector_2.begin() + 2, str_vector_2.end());
-	// for(it = str_vector.begin(); it < str_vector.end(); ++it)
-	// 	std::cout << *it << std::endl;
-	// for(it = str_vector_2.begin(); it < str_vector_2.end(); ++it)
-	// 	std::cout << *it << std::endl;
+	str_vector.insert(str_vector.begin() + 2, str_vector_2.begin(), str_vector_2.end());
+	for(it = str_vector.begin(); it < str_vector.end(); ++it)
+		std::cout << *it << std::endl;
+	str_vector_2.erase(str_vector_2.begin() + 2, str_vector_2.end());
+	for(it = str_vector.begin(); it < str_vector.end(); ++it)
+		std::cout << *it << std::endl;
+	for(it = str_vector_2.begin(); it < str_vector_2.end(); ++it)
+		std::cout << *it << std::endl;
 
-	// std::cout << "Insert and erase." << std::endl;
+	std::cout << "Insert and erase." << std::endl;
 
-	// str_vector.erase(str_vector.begin() + 5);
-	// str_vector.insert(str_vector.begin() + 5, "Oui !");
-	// str_vector.erase(str_vector.begin() + 6);
-	// for(it = str_vector.begin(); it < str_vector.end(); ++it)
-	// 	std::cout << *it << std::endl;
+	str_vector.erase(str_vector.begin() + 5);
+	str_vector.insert(str_vector.begin() + 5, "Oui !");
+	str_vector.erase(str_vector.begin() + 6);
+	for(it = str_vector.begin(); it < str_vector.end(); ++it)
+		std::cout << *it << std::endl;
 
 	std::cout << "Operator=" << std::endl;
 
@@ -310,21 +309,19 @@ int main()
 
 	std::cout << "Assign with iterators" << std::endl;
 	
-	// marche po :sob:
-	// str_vector_2.assign(str_vector_3.begin(), str_vector_3.end());
-	// for(it = str_vector.begin(); it < str_vector.end(); ++it)
-	// 	std::cout << *it << std::endl;
-	// for(it = str_vector_2.begin(); it < str_vector_2.end(); ++it)
-	// 	std::cout << *it << std::endl;
-	// for(it = str_vector_3.begin(); it < str_vector_3.end(); ++it)
-	// 	std::cout << *it << std::endl;
+	str_vector_2.assign(str_vector_3.begin(), str_vector_3.end());
+	for(it = str_vector.begin(); it < str_vector.end(); ++it)
+		std::cout << *it << std::endl;
+	for(it = str_vector_2.begin(); it < str_vector_2.end(); ++it)
+		std::cout << *it << std::endl;
+	for(it = str_vector_3.begin(); it < str_vector_3.end(); ++it)
+		std::cout << *it << std::endl;
 
 	std::cout << "Create a fourth str vector with iterators and a fifth with copy constructor." << std::endl;
 
-	// marche po :sob:
-	// ft::vector<std::string> str_vector_4(str_vector.begin(), str_vector.end());
-	// for(it = str_vector_4.begin(); it < str_vector_4.end(); ++it)
-	// 	std::cout << *it << std::endl;
+	ft::vector<std::string> str_vector_4(str_vector.begin(), str_vector.end());
+	for(it = str_vector_4.begin(); it < str_vector_4.end(); ++it)
+		std::cout << *it << std::endl;
 	ft::vector<std::string> str_vector_5(str_vector_3);
 	for(it = str_vector_5.begin(); it < str_vector_5.end(); ++it)
 		std::cout << *it << std::endl;
@@ -335,6 +332,3 @@ int main()
 
 	return (0);
 }
-
-// problème avec les surcharges avec iterateurs et clear ne fonctionne pas
-// coder insert et erase
