@@ -1,415 +1,328 @@
-// #include <iostream>
-// #include <string>
-// #include <deque>
-// #include <stdlib.h>
-
-// #if 0 //CREATE A REAL STL EXAMPLE
-// 	// #include <map>
-// 	// #include <stack>
-// 	#include <vector>
-// 	namespace ft = std;
-// #else
-// 	// #include <map.hpp>
-// 	// #include <stack.hpp>
-// 	#include <vector.hpp>
-// #endif
-
-
-// #define MAX_RAM 4294967296
-// #define BUFFER_SIZE 4096
-// struct Buffer
-// {
-// 	int idx;
-// 	char buff[BUFFER_SIZE];
-// };
-
-
-// #define COUNT (MAX_RAM / (int)sizeof(Buffer))
-
-// template<typename T>
-// class MutantStack : public ft::stack<T>
-// {
-// public:
-// 	MutantStack() {}
-// 	MutantStack(const MutantStack<T>& src) { *this = src; }
-// 	MutantStack<T>& operator=(const MutantStack<T>& rhs) 
-// 	{
-// 		this->c = rhs.c;
-// 		return *this;
-// 	}
-// 	~MutantStack() {}
-
-// 	typedef typename ft::stack<T>::container_type::iterator iterator;
-
-// 	iterator begin() { return this->c.begin(); }
-// 	iterator end() { return this->c.end(); }
-// };
-
-// int main(int argc, char** argv) {
-// 	if (argc != 2)
-// 	{
-// 		std::cerr << "Usage: ./test seed" << std::endl;
-// 		std::cerr << "Provide a seed please" << std::endl;
-// 		std::cerr << "Count value:" << COUNT << std::endl;
-// 		return 1;
-// 	}
-// 	const int seed = atoi(argv[1]);
-// 	srand(seed);
-
-// 	ft::vector<std::string> vector_str;
-// 	ft::vector<int> vector_int;
-// 	ft::stack<int> stack_int;
-// 	ft::vector<Buffer> vector_buffer;
-// 	ft::stack<Buffer, std::deque<Buffer> > stack_deq_buffer;
-// 	ft::map<int, int> map_int;
-
-// 	for (int i = 0; i < COUNT; i++)
-// 	{
-// 		vector_buffer.push_back(Buffer());
-// 	}
-
-// 	for (int i = 0; i < COUNT; i++)
-// 	{
-// 		const int idx = rand() % COUNT;
-// 		vector_buffer[idx].idx = 5;
-// 	}
-// 	ft::vector<Buffer>().swap(vector_buffer);
-
-// 	try
-// 	{
-// 		for (int i = 0; i < COUNT; i++)
-// 		{
-// 			const int idx = rand() % COUNT;
-// 			vector_buffer.at(idx);
-// 			std::cerr << "Error: THIS VECTOR SHOULD BE EMPTY!!" <<std::endl;
-// 		}
-// 	}
-// 	catch(const std::exception& e)
-// 	{
-// 		//NORMAL ! :P
-// 	}
-	
-// 	for (int i = 0; i < COUNT; ++i)
-// 	{
-// 		map_int.insert(ft::make_pair(rand(), rand()));
-// 	}
-
-// 	int sum = 0;
-// 	for (int i = 0; i < 10000; i++)
-// 	{
-// 		int access = rand();
-// 		sum += map_int[access];
-// 	}
-// 	std::cout << "should be constant with the same seed: " << sum << std::endl;
-
-// 	{
-// 		ft::map<int, int> copy = map_int;
-// 	}
-// 	MutantStack<char> iterable_stack;
-// 	for (char letter = 'a'; letter <= 'z'; letter++)
-// 		iterable_stack.push(letter);
-// 	for (MutantStack<char>::iterator it = iterable_stack.begin(); it != iterable_stack.end(); it++)
-// 	{
-// 		std::cout << *it;
-// 	}
-// 	std::cout << std::endl;
-// 	return (0);
-// }
-
 #include <iostream>
 #include <string>
-#include "vector.hpp"
-#include "stack.hpp"
 #include <deque>
+
+#ifdef STD
+	#include <vector>
+	#include <stack>
+	// #include <map>
+	namespace ft = std;
+#else
+	#include "vector.hpp"
+	#include "stack.hpp"
+#endif
+
+using std::cout;
+using std::endl;
+
+void	test_vector();
+void	test_stack();
+// void	test_map(); et include dans le Makefile
 
 int main()
 {
+	cout << endl << "----------Vector----------" << endl << endl;
+
+	cout << "Create int vector and test resize." << endl;
 	
-	std::cout << std::endl << "----------Vector----------" << std::endl << std::endl;
+	ft::vector<int> int_vector(10, 42);
+	int_vector.push_back(21);
+	int_vector.push_back(21);
+	for(size_t i = 0; i < int_vector.size(); i++)
+	{
+		cout << "[] version : " << int_vector[i] << endl;
+		cout << "at version : " << int_vector.at(i) << endl;
+	}
+	cout << "int_vector size : " << int_vector.size() << endl;
+	cout << "int_vector capacity : " << int_vector.capacity() << endl;
+	int_vector.resize(10);
+	cout << "int_vector size : " << int_vector.size() << endl;
+	cout << "int_vector capacity : " << int_vector.capacity() << endl;
+	int_vector.resize(15, 21);
+	cout << "int_vector size : " << int_vector.size() << endl;
+	cout << "int_vector capacity : " << int_vector.capacity() << endl;
+	int_vector.resize(25);
+	cout << "int_vector size : " << int_vector.size() << endl;
+	cout << "int_vector capacity : " << int_vector.capacity() << endl;
+	for(size_t i = 0; i < int_vector.size(); i++)
+		cout << int_vector[i] << endl;
 
-	// std::cout << "Create int vector and test resize." << std::endl;
+	cout << "Modify int vector and test reserve." << endl;
+
+	for(size_t i = 0; i < 20; i++)
+		int_vector.pop_back();
+	for(size_t i = 0; i < int_vector.size(); i++)
+		cout << int_vector[i] << endl;
+	cout << "int_vector size : " << int_vector.size() << endl;
+	cout << "int_vector capacity : " << int_vector.capacity() << endl;
+	int_vector.reserve(100);
+	cout << "int_vector size : " << int_vector.size() << endl;
+	cout << "int_vector capacity : " << int_vector.capacity() << endl;
+	int_vector.reserve(30);
+	cout << "int_vector size : " << int_vector.size() << endl;
+	cout << "int_vector capacity : " << int_vector.capacity() << endl;
+	for(size_t i = 0; i < int_vector.size(); i++)
+		cout << int_vector[i] << endl;
 	
-	// ft::vector<int> int_vector(10, 42);
-	// int_vector.push_back(21);
-	// int_vector.push_back(21);
-	// for(size_t i = 0; i < int_vector.size(); i++)
-	// {
-	// 	std::cout << "[] version : " << int_vector[i] << std::endl;
-	// 	std::cout << "at version : " << int_vector.at(i) << std::endl;
-	// }
-	// std::cout << "int_vector size : " << int_vector.size() << std::endl;
-	// std::cout << "int_vector capacity : " << int_vector.capacity() << std::endl;
-	// int_vector.resize(10);
-	// std::cout << "int_vector size : " << int_vector.size() << std::endl;
-	// std::cout << "int_vector capacity : " << int_vector.capacity() << std::endl;
-	// int_vector.resize(15, 21);
-	// std::cout << "int_vector size : " << int_vector.size() << std::endl;
-	// std::cout << "int_vector capacity : " << int_vector.capacity() << std::endl;
-	// int_vector.resize(25);
-	// std::cout << "int_vector size : " << int_vector.size() << std::endl;
-	// std::cout << "int_vector capacity : " << int_vector.capacity() << std::endl;
-	// for(size_t i = 0; i < int_vector.size(); i++)
-	// 	std::cout << int_vector[i] << std::endl;
+	cout << "Test empty, front and back." << endl;
 
-	// std::cout << "Modify int vector and test reserve." << std::endl;
+	if (int_vector.empty())
+		cout << "int_vector is empty." << endl;
+	else
+		cout << "int_vector isn't empty." << endl;
+	cout << int_vector.front() << endl;
+	cout << int_vector.back() << endl;
+	int_vector.push_back(21);
+	cout << int_vector.front() << endl;
+	cout << int_vector.back() << endl;
+	for(size_t i = 0; i < int_vector.size(); i++)
+		cout << int_vector[i] << endl;
 
-	// for(size_t i = 0; i < 20; i++)
-	// 	int_vector.pop_back();
-	// for(size_t i = 0; i < int_vector.size(); i++)
-	// 	std::cout << int_vector[i] << std::endl;
-	// std::cout << "int_vector size : " << int_vector.size() << std::endl;
-	// std::cout << "int_vector capacity : " << int_vector.capacity() << std::endl;
-	// int_vector.reserve(100);
-	// std::cout << "int_vector size : " << int_vector.size() << std::endl;
-	// std::cout << "int_vector capacity : " << int_vector.capacity() << std::endl;
-	// int_vector.reserve(30);
-	// std::cout << "int_vector size : " << int_vector.size() << std::endl;
-	// std::cout << "int_vector capacity : " << int_vector.capacity() << std::endl;
-	// for(size_t i = 0; i < int_vector.size(); i++)
-	// 	std::cout << int_vector[i] << std::endl;
+	cout << "Test assign." << endl;
+
+	int_vector.assign(2, 21);
+	for(size_t i = 0; i < int_vector.size(); i++)
+		cout << int_vector[i] << endl;
+	cout << "int_vector size : " << int_vector.size() << endl;
+	cout << "int_vector capacity : " << int_vector.capacity() << endl;
+
+	cout << "Test clear." << endl;
 	
-	// std::cout << "Test empty, front and back." << std::endl;
+	int_vector.clear();
+	for(size_t i = 0; i < int_vector.size(); i++)
+		cout << int_vector[i] << endl;
+	cout << "int_vector size : " << int_vector.size() << endl;
+	cout << "int_vector capacity : " << int_vector.capacity() << endl;
+	if (int_vector.empty())
+		cout << "int_vector is empty." << endl;
+	else
+		cout << "int_vector isn't empty." << endl;
 
-	// if (int_vector.empty())
-	// 	std::cout << "int_vector is empty." << std::endl;
-	// else
-	// 	std::cout << "int_vector isn't empty." << std::endl;
-	// std::cout << int_vector.front() << std::endl;
-	// std::cout << int_vector.back() << std::endl;
-	// int_vector.push_back(21);
-	// std::cout << int_vector.front() << std::endl;
-	// std::cout << int_vector.back() << std::endl;
-	// for(size_t i = 0; i < int_vector.size(); i++)
-	// 	std::cout << int_vector[i] << std::endl;
+	cout << "Modify int_vector and create another." << endl;
 
-	// std::cout << "Test assign." << std::endl;
+	int_vector.push_back(1);
+	int_vector.push_back(2);
+	int_vector.push_back(3);
+	int_vector.push_back(4);
+	int_vector.push_back(5);
+	ft::vector<int> int_vector_compare(10, 42);
+	for(size_t i = 0; i < int_vector.size(); i++)
+		cout << int_vector[i] << endl;
 
-	// int_vector.assign(2, 21);
-	// for(size_t i = 0; i < int_vector.size(); i++)
-	// 	std::cout << int_vector[i] << std::endl;
-	// std::cout << "int_vector size : " << int_vector.size() << std::endl;
-	// std::cout << "int_vector capacity : " << int_vector.capacity() << std::endl;
+	cout << "Test swap." << endl;
 
-	// std::cout << "Test clear." << std::endl;
+	int_vector.swap(int_vector_compare);
+	for(size_t i = 0; i < int_vector.size(); i++)
+		cout << int_vector[i] << endl;
+
+	cout << "Test non member functions overload." << endl;
+
+	if (int_vector == int_vector_compare)
+		cout << "int_vector is equal to int_vector_compare." << endl;
+	else
+		cout << "int_vector isn't equal to int_vector_compare." << endl;
+	if (int_vector != int_vector_compare)
+		cout << "int_vector is different to int_vector_compare." << endl;
+	else
+		cout << "int_vector isn't different to int_vector_compare." << endl;
+	if (int_vector < int_vector_compare)
+		cout << "int_vector is less than int_vector_compare." << endl;
+	else
+		cout << "int_vector isn't less than int_vector_compare." << endl;
+	if (int_vector <= int_vector_compare)
+		cout << "int_vector is less or equal to int_vector_compare." << endl;
+	else
+		cout << "int_vector isn't less or equal to int_vector_compare." << endl;
+	if (int_vector > int_vector_compare)
+		cout << "int_vector is greater than int_vector_compare." << endl;
+	else
+		cout << "int_vector isn't greater than int_vector_compare." << endl;
+	if (int_vector >= int_vector_compare)
+		cout << "int_vector is greater or equal to int_vector_compare." << endl;
+	else
+		cout << "int_vector isn't greater or equal to int_vector_compare." << endl;
+	swap(int_vector, int_vector_compare);
+	for(size_t i = 0; i < int_vector.size(); i++)
+		cout << int_vector[i] << endl;
+
+	cout << "Insert multiple elements." << endl;
+
+	int_vector.insert(int_vector.begin() + 3, 5, 0);
+	for(size_t i = 0; i < int_vector.size(); i++)
+		cout << int_vector[i] << endl;
+
+	cout << "Create str vector." << endl;
+
+	ft::vector<std::string>	str_vector;
+	str_vector.push_back("Bonjour.");
+	str_vector.push_back("Yo !");
+	str_vector.push_back("Il marche bien ton vecteur ?");
+	str_vector.push_back("Il est ni-quel.");
+	ft::vector<std::string>::iterator it;
+	for(it = str_vector.begin(); it < str_vector.end(); ++it)
+		cout << *it << endl;
+
+	cout << "Create a second str vector." << endl;
+
+	ft::vector<std::string>	str_vector_2;
+	str_vector_2.push_back("Ça va ?");
+	str_vector_2.push_back("Oui et toi ?");
+	str_vector_2.push_back("Bof...");
+	str_vector_2.push_back("Qu'est-ce qu'il y a ?");
+	for(it = str_vector_2.begin(); it < str_vector_2.end(); ++it)
+		cout << *it << endl;
+
+	cout << "Insert and erase with iterators." << endl;
+
+	str_vector.insert(str_vector.begin() + 2, str_vector_2.begin(), str_vector_2.end());
+	for(it = str_vector.begin(); it < str_vector.end(); ++it)
+		cout << *it << endl;
+	str_vector_2.erase(str_vector_2.begin() + 2, str_vector_2.end());
+	for(it = str_vector.begin(); it < str_vector.end(); ++it)
+		cout << *it << endl;
+	for(it = str_vector_2.begin(); it < str_vector_2.end(); ++it)
+		cout << *it << endl;
+
+	cout << "Insert and erase." << endl;
+
+	str_vector.erase(str_vector.begin() + 2);
+	str_vector.insert(str_vector.begin() + 2, "Oui !");
+	str_vector.erase(str_vector.begin() + 3);
+	for(it = str_vector.begin(); it < str_vector.end(); ++it)
+		cout << *it << endl;
+
+	cout << "Operator=" << endl;
+
+	str_vector_2 = str_vector;
+	for(it = str_vector_2.begin(); it < str_vector_2.end(); ++it)
+		cout << *it << endl;
 	
-	// int_vector.clear();
-	// for(size_t i = 0; i < int_vector.size(); i++)
-	// 	std::cout << int_vector[i] << std::endl;
-	// std::cout << "int_vector size : " << int_vector.size() << std::endl;
-	// std::cout << "int_vector capacity : " << int_vector.capacity() << std::endl;
-	// if (int_vector.empty())
-	// 	std::cout << "int_vector is empty." << std::endl;
-	// else
-	// 	std::cout << "int_vector isn't empty." << std::endl;
+	cout << "Create a third str vector." << endl;
 
-	// std::cout << "Modify int_vector and create another." << std::endl;
+	ft::vector<std::string>	str_vector_3;
+	str_vector_3.push_back("Pouloulou");
+	str_vector_3.push_back("Jfais repérage de femmes sur les réseaux.");
+	for(it = str_vector_3.begin(); it < str_vector_3.end(); ++it)
+		cout << *it << endl;
 
-	// int_vector.push_back(1);
-	// int_vector.push_back(2);
-	// int_vector.push_back(3);
-	// int_vector.push_back(4);
-	// int_vector.push_back(5);
-	// ft::vector<int> int_vector_compare(10, 42);
-	// for(size_t i = 0; i < int_vector.size(); i++)
-	// 	std::cout << int_vector[i] << std::endl;
+	cout << "Assign with iterators" << endl;
+	str_vector_2.assign(str_vector_3.begin(), str_vector_3.end());
+	for(it = str_vector.begin(); it < str_vector.end(); ++it)
+		cout << *it << endl;
+	for(it = str_vector_2.begin(); it < str_vector_2.end(); ++it)
+		cout << *it << endl;
+	for(it = str_vector_3.begin(); it < str_vector_3.end(); ++it)
+		cout << *it << endl;
 
-	// std::cout << "Test swap." << std::endl;
+	cout << "Create a fourth str vector with iterators and a fifth with copy constructor." << endl;
 
-	// int_vector.swap(int_vector_compare);
-	// for(size_t i = 0; i < int_vector.size(); i++)
-	// 	std::cout << int_vector[i] << std::endl;
+	cout << endl << endl << endl << "===================== Bruh" << endl << endl << endl;
+		for(it = str_vector.begin(); it < str_vector.end(); ++it)
+		cout << *it << endl;
+	cout << str_vector.size() << " | " << str_vector.capacity() << endl;
 
-	// std::cout << "Test non member functions overload." << std::endl;
+	ft::vector<std::string> str_vector_4(str_vector.begin(), str_vector.end());
+	cout << endl << endl << endl << "===================== Bruh" << endl << endl << endl;
+	for(it = str_vector_4.begin(); it < str_vector_4.end(); ++it)
+		cout << *it << endl;
+	ft::vector<std::string> str_vector_5(str_vector_3);
+	for(it = str_vector_5.begin(); it < str_vector_5.end(); ++it)
+		cout << *it << endl;
 
-	// if (int_vector == int_vector_compare)
-	// 	std::cout << "int_vector is equal to int_vector_compare." << std::endl;
-	// else
-	// 	std::cout << "int_vector isn't equal to int_vector_compare." << std::endl;
-	// if (int_vector != int_vector_compare)
-	// 	std::cout << "int_vector is different to int_vector_compare." << std::endl;
-	// else
-	// 	std::cout << "int_vector isn't different to int_vector_compare." << std::endl;
-	// if (int_vector < int_vector_compare)
-	// 	std::cout << "int_vector is less than int_vector_compare." << std::endl;
-	// else
-	// 	std::cout << "int_vector isn't less than int_vector_compare." << std::endl;
-	// if (int_vector <= int_vector_compare)
-	// 	std::cout << "int_vector is less or equal to int_vector_compare." << std::endl;
-	// else
-	// 	std::cout << "int_vector isn't less or equal to int_vector_compare." << std::endl;
-	// if (int_vector > int_vector_compare)
-	// 	std::cout << "int_vector is greater than int_vector_compare." << std::endl;
-	// else
-	// 	std::cout << "int_vector isn't greater than int_vector_compare." << std::endl;
-	// if (int_vector >= int_vector_compare)
-	// 	std::cout << "int_vector is greater or equal to int_vector_compare." << std::endl;
-	// else
-	// 	std::cout << "int_vector isn't greater or equal to int_vector_compare." << std::endl;
-	// swap(int_vector, int_vector_compare);
-	// for(size_t i = 0; i < int_vector.size(); i++)
-	// 	std::cout << int_vector[i] << std::endl;
+	cout << endl << "----------Tester----------" << endl << endl;
 
-	// std::cout << "Insert multiple elements." << std::endl;
+	test_vector();
 
-	// int_vector.insert(int_vector.begin() + 3, 5, 0);
-	// for(size_t i = 0; i < int_vector.size(); i++)
-	// 	std::cout << int_vector[i] << std::endl;
+	cout << endl << "----------Stack----------" << endl << endl;
 
-	// std::cout << "Create str vector." << std::endl;
-
-	// ft::vector<std::string>	str_vector;
-	// str_vector.push_back("Bonjour.");
-	// str_vector.push_back("Yo !");
-	// str_vector.push_back("Il marche bien ton vecteur ?");
-	// str_vector.push_back("Il est ni-quel.");
-	// ft::vector<std::string>::iterator it;
-	// for(it = str_vector.begin(); it < str_vector.end(); ++it)
-	// 	std::cout << *it << std::endl;
-
-	// std::cout << "Create a second str vector." << std::endl;
-
-	// ft::vector<std::string>	str_vector_2;
-	// str_vector_2.push_back("Ça va ?");
-	// str_vector_2.push_back("Oui et toi ?");
-	// str_vector_2.push_back("Bof...");
-	// str_vector_2.push_back("Qu'est-ce qu'il y a ?");
-	// for(it = str_vector_2.begin(); it < str_vector_2.end(); ++it)
-	// 	std::cout << *it << std::endl;
-
-	// std::cout << "Insert and erase with iterators." << std::endl;
-
-	// str_vector.insert(str_vector.begin() + 2, str_vector_2.begin(), str_vector_2.end());
-	// for(it = str_vector.begin(); it < str_vector.end(); ++it)
-	// 	std::cout << *it << std::endl;
-	// str_vector_2.erase(str_vector_2.begin() + 2, str_vector_2.end());
-	// for(it = str_vector.begin(); it < str_vector.end(); ++it)
-	// 	std::cout << *it << std::endl;
-	// for(it = str_vector_2.begin(); it < str_vector_2.end(); ++it)
-	// 	std::cout << *it << std::endl;
-
-	// std::cout << "Insert and erase." << std::endl;
-
-	// str_vector.erase(str_vector.begin() + 5);
-	// str_vector.insert(str_vector.begin() + 5, "Oui !");
-	// str_vector.erase(str_vector.begin() + 6);
-	// for(it = str_vector.begin(); it < str_vector.end(); ++it)
-	// 	std::cout << *it << std::endl;
-
-	// std::cout << "Operator=" << std::endl;
-
-	// str_vector_2 = str_vector;
-	// for(it = str_vector_2.begin(); it < str_vector_2.end(); ++it)
-	// 	std::cout << *it << std::endl;
-	
-	// std::cout << "Create a third str vector." << std::endl;
-
-	// ft::vector<std::string>	str_vector_3;
-	// str_vector_3.push_back("Pouloulou");
-	// str_vector_3.push_back("Jfais repérage de femmes sur les réseaux.");
-	// for(it = str_vector_3.begin(); it < str_vector_3.end(); ++it)
-	// 	std::cout << *it << std::endl;
-
-	// std::cout << "Assign with iterators" << std::endl;
-	
-	// str_vector_2.assign(str_vector_3.begin(), str_vector_3.end());
-	// for(it = str_vector.begin(); it < str_vector.end(); ++it)
-	// 	std::cout << *it << std::endl;
-	// for(it = str_vector_2.begin(); it < str_vector_2.end(); ++it)
-	// 	std::cout << *it << std::endl;
-	// for(it = str_vector_3.begin(); it < str_vector_3.end(); ++it)
-	// 	std::cout << *it << std::endl;
-
-	// std::cout << "Create a fourth str vector with iterators and a fifth with copy constructor." << std::endl;
-
-	// ft::vector<std::string> str_vector_4(str_vector.begin(), str_vector.end());
-	// for(it = str_vector_4.begin(); it < str_vector_4.end(); ++it)
-	// 	std::cout << *it << std::endl;
-	// ft::vector<std::string> str_vector_5(str_vector_3);
-	// for(it = str_vector_5.begin(); it < str_vector_5.end(); ++it)
-	// 	std::cout << *it << std::endl;
-
-	std::cout << std::endl << "----------Stack----------" << std::endl << std::endl;
-
-	std::cout << "Create 3 differents stacks and test their size." << std::endl;
+	cout << "Create 3 differents stacks and test their size." << endl;
 
 	ft::vector<int> myvector(2, 42);
   	ft::stack<int> mystack;
   	ft::stack<int,ft::vector<int> > empty_stack;
   	ft::stack<int,ft::vector<int> > vector_stack(myvector);
 
-  	std::cout << "mystack size : " << mystack.size() << std::endl;
+  	cout << "mystack size : " << mystack.size() << endl;
 	if (mystack.empty())
-  		std::cout << "mystack is empty" << std::endl;
+  		cout << "mystack is empty" << endl;
 	else
-		std::cout << "mystack isn't empty" << std::endl;
-  	std::cout << "empty_stack size : " << empty_stack.size() << std::endl;
+		cout << "mystack isn't empty" << endl;
+  	cout << "empty_stack size : " << empty_stack.size() << endl;
 	if (empty_stack.empty())
-  		std::cout << "empty_stack is empty" << std::endl;
+  		cout << "empty_stack is empty" << endl;
 	else
-		std::cout << "empty_stack isn't empty" << std::endl;
-  	std::cout << "vector_stack size : " << vector_stack.size() << std::endl;
+		cout << "empty_stack isn't empty" << endl;
+  	cout << "vector_stack size : " << vector_stack.size() << endl;
 	if (vector_stack.empty())
-  		std::cout << "vector_stack is empty" << std::endl;
+  		cout << "vector_stack is empty" << endl;
 	else
-		std::cout << "vector_stack isn't empty" << std::endl;
+		cout << "vector_stack isn't empty" << endl;
 
-	std::cout << "Modify with push and pop." << std::endl;
+	cout << "Modify with push and pop." << endl;
 
-	std::cout << vector_stack.top() << std::endl;
+	cout << vector_stack.top() << endl;
 	vector_stack.push(21);
-	std::cout << vector_stack.top() << std::endl;
+	cout << vector_stack.top() << endl;
 	vector_stack.pop();
-	std::cout << vector_stack.top() << std::endl;
+	cout << vector_stack.top() << endl;
 	empty_stack.push(1);
 	empty_stack.push(2);
 	empty_stack.push(3);
 	empty_stack.push(4);
 	empty_stack.push(5);
 
-	std::cout << "Test non-member overloads." << std::endl;
+	cout << "Test non-member overloads." << endl;
 
 	if (vector_stack == empty_stack)
-		std::cout << "vector_stack is equal to empty_stack." << std::endl;
+		cout << "vector_stack is equal to empty_stack." << endl;
 	else
-		std::cout << "vector_stack isn't equal to empty_stack." << std::endl;
+		cout << "vector_stack isn't equal to empty_stack." << endl;
 	if (vector_stack != empty_stack)
-		std::cout << "vector_stack is different to empty_stack." << std::endl;
+		cout << "vector_stack is different to empty_stack." << endl;
 	else
-		std::cout << "vector_stack isn't different to empty_stack." << std::endl;
+		cout << "vector_stack isn't different to empty_stack." << endl;
 	if (vector_stack < empty_stack)
-		std::cout << "vector_stack is less than empty_stack." << std::endl;
+		cout << "vector_stack is less than empty_stack." << endl;
 	else
-		std::cout << "vector_stack isn't less than empty_stack." << std::endl;
+		cout << "vector_stack isn't less than empty_stack." << endl;
 	if (vector_stack <= empty_stack)
-		std::cout << "vector_stack is less or equal to empty_stack." << std::endl;
+		cout << "vector_stack is less or equal to empty_stack." << endl;
 	else
-		std::cout << "vector_stack isn't less or equal to empty_stack." << std::endl;
+		cout << "vector_stack isn't less or equal to empty_stack." << endl;
 	if (vector_stack > empty_stack)
-		std::cout << "vector_stack is greater than empty_stack." << std::endl;
+		cout << "vector_stack is greater than empty_stack." << endl;
 	else
-		std::cout << "vector_stack isn't greater than empty_stack." << std::endl;
+		cout << "vector_stack isn't greater than empty_stack." << endl;
 	if (vector_stack >= empty_stack)
-		std::cout << "vector_stack is greater or equal to empty_stack." << std::endl;
+		cout << "vector_stack is greater or equal to empty_stack." << endl;
 	else
-		std::cout << "vector_stack isn't greater or equal to empty_stack." << std::endl;
+		cout << "vector_stack isn't greater or equal to empty_stack." << endl;
 
-	std::cout << "Aaaaand it works with everything." << std::endl;
+	cout << "Aaaaand it works with everything." << endl;
 
 	std::deque<int> mydeque(5, 42);
 	ft::stack<int,std::deque<int> > deque_stack(mydeque);
 
-	std::cout << "deque_stack size : " << deque_stack.size() << std::endl;
+	cout << "deque_stack size : " << deque_stack.size() << endl;
 	if (deque_stack.empty())
-  		std::cout << "deque_stack is empty" << std::endl;
+  		cout << "deque_stack is empty" << endl;
 	else
-		std::cout << "deque_stack isn't empty" << std::endl;
-	std::cout << deque_stack.top() << std::endl;
+		cout << "deque_stack isn't empty" << endl;
+	cout << deque_stack.top() << endl;
 	deque_stack.push(21);
-	std::cout << deque_stack.top() << std::endl;
+	cout << deque_stack.top() << endl;
 	deque_stack.pop();
-	std::cout << deque_stack.top() << std::endl;
+	cout << deque_stack.top() << endl;
 
-	std::cout << std::endl << "----------Map----------" << std::endl << std::endl;
+	cout << endl << "----------Tester----------" << endl << endl;
+
+	test_stack();
+
+	// cout << endl << "----------Map----------" << endl << endl;
+	
+	// cout << endl << "----------Tester----------" << endl << endl;
+
+	// test_map();
 
 	return (0);
 }

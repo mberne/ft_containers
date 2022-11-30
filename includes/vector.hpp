@@ -53,14 +53,17 @@ namespace ft
 						InputIterator tmp = first;
 						size_type i = 0;
 
-						for (; tmp != last; ++tmp)
-							i++;
+						while (tmp != last)
+						{
+							++tmp;
+							++i;
+						}
 						_begin = _allocator.allocate(i);
 						_end = _construct_with_copy(first, last, begin());
-						_end_of_storage = _end;
+						_end_of_storage = _begin + i;
 					}
 
-				vector(const vector &x) : _allocator(x._allocator) {
+				vector(const vector &x) : _allocator(x.get_allocator()) {
 					_begin = _allocator.allocate(x.size());
 					_end = _construct_with_copy(x.begin(), x.end(), begin());
 					_end_of_storage = _end;
@@ -116,7 +119,7 @@ namespace ft
 
 				size_type max_size() const									{ return _allocator.max_size(); }
 
-				void resize (size_type n, value_type val = value_type())	{
+				void resize(size_type n, value_type val = value_type())	{
 					if (n < size())
 					{
 						_destroy(begin() + n, end());
@@ -125,7 +128,7 @@ namespace ft
 					else if (n > size())
 					{
 						if (n > capacity())
-							_reallocate_with_save(n, begin(), end());
+							_reallocate_with_save(n - size(), begin(), end());
 						_fill_vector(_end, n - size(), val);
 						_end = _end + n - size();
 					}
@@ -135,13 +138,13 @@ namespace ft
 
 				bool empty() const											{ return size() == 0; }
 
-				void reserve (size_type n)									{
+				void reserve(size_type n)									{
 					if (n > capacity())
 					{
 						if (n > max_size())
 							throw std::length_error("you tried to exceed maximum supported size");
 						else
-							_reallocate_with_save(n, begin(), end());
+							_reallocate_with_save(n - size(), begin(), end());
 					}
 				}
 
@@ -183,7 +186,7 @@ namespace ft
 							i++;
 						if (i > capacity())
 							_reallocate(i);
-						_construct_with_copy(first, last, begin());
+						_end = _construct_with_copy(first, last, begin());
 					}
 
 				void assign (size_type n, const value_type& val) {
@@ -191,11 +194,12 @@ namespace ft
 					if (n > capacity())
 						_reallocate(n);
 					_fill_vector(_begin, n, val);
+					_end = _begin + n;
 				}
 
 				void push_back (const value_type& val) {
 					if (size() == capacity())
-						_reallocate_with_save(size() + 1, begin() , end());
+						_reallocate_insert(begin() , end());
 					_allocator.construct(_end, val);
 					++_end;
 				}
@@ -206,39 +210,65 @@ namespace ft
 				}
 
 				iterator insert (iterator position, const value_type& val) {
-					size_type n = position - begin();
+					const size_type	n = position - begin();
+					// if (_end == _end_of_storage)
+					// 	_reallocate_insert(begin(), end());
+					// {
+					// 	if (position == end())
+					// 	{
+					// 		_allocator.construct(_end, val);
+					// 		++_end;
+					// 	}
+					// 	else
+					// 	{
+					// 		_allocator.construct(_end, *(_end - 1));
+					// 		++_end;
+					// 		_copy_backward(position, end() - 2, end() - 1);
+					// 		*position = val;
+					// 	}
+					// }
+					// return begin() + n;
 
 					if (_end == _end_of_storage)
-						_reallocate_with_save(size() + 1, begin(), end());
-					else
+						_reallocate_insert(begin(), end());
+					else if (position == end())
 					{
-						if (position == end())
-						{
-							_allocator.construct(_end, val);
-							++_end;
-						}
-						else
-						{
-							_allocator.construct(_end, *(_end - 1));
-							++_end;
-							_copy_backward(position, end() - 2, end() - 1);
-							*position = val;
-						}
+						_allocator.construct(_end, val);
+						++_end;
+						return begin() + n;
 					}
-					return begin() + n;
+					iterator	new_position = _begin + n;
+					_allocator.construct(_end, *(_end - 1));
+					++_end;
+					_copy_backward(new_position, end() - 2, end() - 1);
+					*new_position = val;
+					return new_position;
 				};
 
 				void insert (iterator position, size_type n, const value_type& val) {
 					if (n != 0)
 					{
-						if (_end_of_storage - _end >= n)
+						if (static_cast<size_type>(_end_of_storage - _end) >= n)
 						{
-							pointer old_end = _end;
+							pointer			old_end = _end;
+							const size_type	elems_after = end() - position;
 							try
 							{
-								_end = _construct_with_copy((end(), end() + n, _end));
-								_copy_backward(position, old_end - n, old_end);
-								_fill(position, old_end, val);
+								if (elems_after > n)
+								{
+									_end = _construct_with_copy(end() - n, end(), _end);
+									_copy_backward(position, old_end - n, old_end);
+									_fill(position, position + n, val);
+								}
+								else
+								{
+									size_type tmp = n - elems_after;
+									_fill_vector(_end, tmp, val);
+									_end += (tmp);
+									_copy(position, iterator(old_end), end());
+									_end += elems_after;
+									_fill(position, old_end, val);
+								}
 							}
 							catch(...)
 							{
@@ -248,14 +278,16 @@ namespace ft
 						}
 						else
 						{
-							pointer new_begin = _allocator.allocate(capacity() + (n - (_end_of_storage - _end)));
+							const size_type len = check_len(n, "vector::insert");
+							const size_type elems_before = position - begin();
+							pointer new_begin = _allocator.allocate(len);
 							pointer new_end = new_begin;
 							try
 							{
-								new_end = _construct_with_copy(begin(), position, new_begin);
-								_fill(position, position + n, val);
+								_fill_vector(new_begin + elems_before, n, val);
+								new_end = _construct_with_copy(_begin, position.base(), new_begin);
 								new_end += n;
-								new_end = _construct_with_copy(position, end(), new_end);
+								new_end = _construct_with_copy (position.base(), _end, new_end);
 							}
 							catch(...)
 							{
@@ -266,7 +298,7 @@ namespace ft
 							_allocator.deallocate(_begin, capacity());
 							_begin = new_begin;
 							_end = new_end;
-							_end_of_storage = new_end;
+							_end_of_storage = new_begin + len;
 						}
 					}
 				};
@@ -278,12 +310,63 @@ namespace ft
 							for (; first != last; ++first)
 								insert(end(), *first);
 						}
-						else
+						else if (first != last)
 						{
-							// po compris cque tu fais bro
-							;
+							vector tmp(first, last);
+							_insert_range(position, tmp.begin(), tmp.end());
 						}
 					};
+
+			private:
+
+				void _insert_range (iterator position, iterator first, iterator last) {
+					const size_type	n = last - first;
+
+					if (static_cast<size_type>(_end_of_storage - _end) >= n)
+					{
+						const size_type	elems_after = end() - position;
+						pointer			old_end = _end;
+						if (elems_after > n)
+						{
+							_end = _construct_with_copy(_end - n, _end, _end);
+							_copy_backward(position.base(), old_end - n, old_end);
+							_copy(first, last, position);
+						}
+						else
+						{
+							iterator mid = first;
+							mid += elems_after;
+							_end = _construct_with_copy(mid, last, _end);
+							_end = _construct_with_copy(position.base(), old_end, _end);
+							_copy(first, mid, position);
+						}
+					}
+					else
+					{
+						const size_type len = check_len(n, "vector::_insert_range");
+						pointer	new_begin = _allocator.allocate(len);
+						pointer	new_end = new_begin;
+						try
+						{
+							new_end = _construct_with_copy(_begin, position.base(), new_begin);
+							new_end = _construct_with_copy(first, last, new_end);
+							new_end = _construct_with_copy(position.base(), _end, new_end);
+						}
+						catch(...)
+						{
+							_destroy(new_begin, new_end);
+							_allocator.deallocate(new_begin, len);
+							throw;
+						}
+						_destroy(_begin, _end);
+						_allocator.deallocate(_begin, capacity());
+						_begin = new_begin;
+						_end = new_end;
+						_end_of_storage = new_begin + len;
+					}
+				};
+
+			public:
 
 				iterator erase (iterator position) {
 					if (position + 1 != end())
@@ -298,7 +381,7 @@ namespace ft
 					{
 						iterator new_end = _copy(last, end(), first);
 						_destroy(new_end, end());
-						_end = first + (end() - last);
+						_end = new_end.base();
 					}
 					return first;
 				};
@@ -317,7 +400,7 @@ namespace ft
 
 	// Allocator
 
-				allocator_type	get_allocator() const { return _allocator; }
+				allocator_type	get_allocator() const { return allocator_type(_allocator); }
 
 	// Utils
 
@@ -341,14 +424,16 @@ namespace ft
 
 				void	_reallocate(size_type n) {
 					_allocator.deallocate(_begin, capacity());
-					_begin = _allocator.allocate(n);
-					_end = _begin + n;
-					_end_of_storage = _end;
+					const size_type len = check_len(n, "vector::_reallocate");
+					_begin = _allocator.allocate(len);
+					_end = _begin;
+					_end_of_storage = _begin + len;
 				}
 
 				template <class InputIterator>
 					void	_reallocate_with_save(size_type n, InputIterator first, InputIterator last) {
-						pointer new_begin = _allocator.allocate(n);
+						const size_type len = check_len(n, "vector::_reallocate_with_save");
+						pointer new_begin = _allocator.allocate(len);
 						pointer new_end = new_begin + size();
 
 						try
@@ -358,7 +443,7 @@ namespace ft
 							_allocator.deallocate(_begin, capacity());
 							_begin = new_begin;
 							_end = new_end;
-							_end_of_storage = new_begin + n;
+							_end_of_storage = new_begin + len;
 						}
 						catch(...)
 						{
@@ -369,6 +454,27 @@ namespace ft
 					}
 
 				template <class InputIterator>
+					void	_reallocate_insert(InputIterator first, InputIterator last) {
+						const size_type len = check_len(1, "vector::_reallocate_insert");
+						pointer new_begin = _allocator.allocate(len);
+						pointer new_end = new_begin + size();
+						try
+						{
+							_construct_with_copy(first, last, new_begin);
+							clear();
+							_allocator.deallocate(_begin, capacity());
+							_begin = new_begin;
+							_end = new_end;
+							_end_of_storage = new_begin + len;
+						}
+						catch(...)
+						{
+							_allocator.deallocate(new_begin, size());
+							throw;
+						}
+					}
+
+				template <class InputIterator>
 					pointer	_construct_with_copy(InputIterator first, InputIterator last, iterator current)
 					{
 						iterator tmp = current;
@@ -376,7 +482,9 @@ namespace ft
 						try
 						{
 							for (; first != last; ++first, ++current)
-							_allocator.construct(_allocator.address(*current), *first);
+							{
+								_allocator.construct(_allocator.address(*current), *first);
+							}
 							return _allocator.address(*current);
 						}
 						catch(...)
@@ -411,6 +519,16 @@ namespace ft
 				{
 					for (; first != last; ++first)
 						*first = val;
+				}
+
+				size_type	check_len(size_type n, const char* str) const
+				{
+					if (max_size() - size() < n)
+						throw std::length_error(str);
+					const size_type len = size() + (std::max)(size(), n);
+					if (len < size() || len > max_size())
+						return max_size();
+					return len;
 				}
 		};
 
