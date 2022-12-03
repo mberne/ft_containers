@@ -211,23 +211,6 @@ namespace ft
 
 				iterator insert (iterator position, const value_type& val) {
 					const size_type	n = position - begin();
-					// if (_end == _end_of_storage)
-					// 	_reallocate_insert(begin(), end());
-					// {
-					// 	if (position == end())
-					// 	{
-					// 		_allocator.construct(_end, val);
-					// 		++_end;
-					// 	}
-					// 	else
-					// 	{
-					// 		_allocator.construct(_end, *(_end - 1));
-					// 		++_end;
-					// 		_copy_backward(position, end() - 2, end() - 1);
-					// 		*position = val;
-					// 	}
-					// }
-					// return begin() + n;
 
 					if (_end == _end_of_storage)
 						_reallocate_insert(begin(), end());
