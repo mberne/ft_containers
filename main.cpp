@@ -24,7 +24,7 @@ int main()
 	cout << endl << "----------Vector----------" << endl << endl;
 
 	cout << "Create int vector and test resize." << endl;
-	
+
 	ft::vector<int> int_vector(10, 42);
 	int_vector.push_back(21);
 	int_vector.push_back(21);

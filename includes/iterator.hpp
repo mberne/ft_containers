@@ -15,8 +15,8 @@ namespace ft
 				T							current;
 
 			public:
-				typedef T										iterator_type;
 				typedef typename traits_type::difference_type	difference_type;
+				typedef T										iterator_type;
 				typedef typename traits_type::value_type		value_type;
 				typedef typename traits_type::pointer			pointer;
 				typedef typename traits_type::reference			reference;
@@ -29,15 +29,10 @@ namespace ft
 				template<typename T2>
     				vector_iterator(const vector_iterator<T2>& src) : current(src.base()) {}
 
-			// Destructor
-
-				~vector_iterator() {}
-
 			// Member functions
 
 				reference 				operator*() const { return *current; }
 				pointer					operator->() const { return current; }
-				// *a = t
 				vector_iterator 		&operator++() {
 					++current;
 					return *this;
@@ -96,14 +91,6 @@ namespace ft
 			inline typename vector_iterator<ItL>::difference_type		operator-(const vector_iterator<ItL>& lhs, const vector_iterator<ItR>& rhs) { return lhs.base() - rhs.base(); }
 		template<typename Iterator>
 			inline typename vector_iterator<Iterator>::difference_type	operator-(const vector_iterator<Iterator>& lhs, const vector_iterator<Iterator>& rhs) { return lhs.base() - rhs.base(); }
-
-// struct bidirectional_iterator_tag {};
-// template<?>
-// class map_iterator<?>
-// {
-// 	typedef bidirectional_iterator_tag 
-// }
-
 }
 
 #endif

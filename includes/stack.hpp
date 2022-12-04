@@ -32,11 +32,11 @@ namespace ft
 
 				void pop() { c.pop_back(); };
 
-				private:
-					template<typename T1, typename Container1>
-						friend bool	operator==(const stack<T1, Container1>&, const stack<T1, Container1>&);
-					template<typename T1, typename Container1>
-						friend bool	operator<(const stack<T1, Container1>&, const stack<T1, Container1>&);
+			private:
+				template<typename T1, typename Container1>
+					friend bool	operator==(const stack<T1, Container1>&, const stack<T1, Container1>&);
+				template<typename T1, typename Container1>
+					friend bool	operator<(const stack<T1, Container1>&, const stack<T1, Container1>&);
 		};
 
 	// Non member functions overload
