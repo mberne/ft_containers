@@ -16,16 +16,16 @@ namespace ft
 	template<typename Val>
 		struct	Avl_tree_node
 		{
-			typedef Avl_tree_node<Val>* 		Node_type;
+			typedef Avl_tree_node<Val>* 		Node;
 			typedef const Avl_tree_node<Val>*	Const_Node_type;
 			typedef Val							value_type;
 			typedef Val::first_type				key_type
 
-			Node_type	parent;
-			Node_type	left_child;
-			Node_type	right_child;
+			Node	parent;
+			Node	left_child;
+			Node	right_child;
 			value_type	value;
-			int			balance;
+			int			height;
 
 			key_type			key()			{ return value.first; }
 			value_type*			valptr()		{ return &value; }
@@ -38,7 +38,7 @@ namespace ft
 		class Avl_tree
 		{
 			protected:
-				typedef Avl_tree_node<Val>* 											Node_type;
+				typedef Avl_tree_node<Val>* 											Node;
 				typedef const Avl_tree_node<Val>*										Const_Node_type;
 				typedef typename Alloc::template rebind<Avl_tree_node<Val> >::other     Node_allocator;
 
@@ -64,132 +64,50 @@ namespace ft
 				size_t				_node_count;
 				Avl_tree_node		_header;
 
-				Node_type	_create_node(const value_type& val)
+				Node	_create_node(const value_type& val)
 				{
-					Node_type	node = _node_allocator.allocate(1);
+					Node	node = _node_allocator.allocate(1);
 
 					try			{ _node_allocator.construct(node->valptr(), val); }
 					catch(...)	{ _node_allocator.deallocate(node, 1); throw; }
 					return node;
 				}
 
-				void	_destroy_node(Node_type node)
+				void	_destroy_node(Node node)
 				{
 					_node_allocator.destroy(node->valptr());
 					_node_allocator.deallocate(node, 1);
 				}
 
-				Node_type	_clone_node(Const_Node_type src)
+				Node	_clone_node(Const_Node_type src)
 				{
-					Node_type clone = _create_node(*src->valptr());
+					Node clone = _create_node(*src->valptr());
 
 					clone->parent = NULL;
 					clone->left_child = NULL;
 					clone->right_child = NULL;
-					clone->balance = 0;
+					clone->height = src->height;
 					return clone;
 				}
 
-				Node_type&		_root()				{ return _header.parent; }
+				Node&			_root()				{ return _header.parent; }
 				Const_Node_type	_root() const		{ return _header.parent; }
-				Node_type&		_leftmost()			{ return _header.left; }
-				Const_Base_ptr	_leftmost() const	{ return _header.left; }
-				Node_type&		_rightmost()		{ return _header.right; }
-				Const_Base_ptr	_rightmost() const	{ return _header.right; }
-				Node_type		_end()				{ return &_header; }
+				Node&			_leftmost()			{ return _header.left_child; }
+				Const_Base_ptr	_leftmost() const	{ return _header.left_child; }
+				Node&			_rightmost()		{ return _header.right_child; }
+				Const_Base_ptr	_rightmost() const	{ return _header.right_child; }
+				Node			_end()				{ return &_header; }
 				Const_Base_ptr	_end() const		{ return &_header; }
 
-				static Node_type		_minimum(Node_type node)		{ while (node->left_child) node = node->left_child; return node; }
+				static Node				_minimum(Node node)				{ while (node->left_child) node = node->left_child; return node; }
 				static Const_Node_type	_minimum(Const_Node_type node)	{ while (node->left_child) node = node->left_child; return node; }
-				static Node_type		_maximum(Node_type node)		{  while (node->right_child) node = node->right_child; return node; }
+				static Node				_maximum(Node node)				{  while (node->right_child) node = node->right_child; return node; }
 				static Const_Node_type	_maximum(Const_Node_type node)	{  while (node->right_child) node = node->right_child; return node; }
 
 			private:
-				pair<Node_type, Node_type>	get_insert_unique_pos(const key_type& key)
+				Node	_copy(Const_Node_type src, Node parent)
 				{
-					typedef pair<Node_type, Node_type> Res;
-					Node_type	x = _root();
-					Node_type	y = _end();
-					bool		comp = true;
-
-					while (x)
-					{
-						y = x;
-						comp = _key_comp(key, x->key());
-						x = comp ? x->left_child : x->right_child;
-					}
-					iterator	j = iterator(y);
-					if (comp)
-					{
-						if (j == begin())
-							return Res(x, y);
-						else
-							--j;
-					}
-					if (_key_comp(j.node->key(), key))
-						return Res(x, y);
-					return Res(j.node, 0);
-				}
-
-				pair<Node_type, Node_type>	get_insert_hint_pos(const_iterator pos, const key_type& key)
-				{
-					typedef pair<Node_type, Node_type> Res;
-					iterator	it = pos._const_cast();
-
-					if (it.node == _end())
-					{
-						if (size() > 0 && _key_comp(_rightmost()->key(), key))
-							return Res(0, _rightmost());
-						else
-							return get_insert_unique_pos(key);
-					}
-					else if (_key_comp(key, it.node->key()))
-					{
-						iterator before = it;
-						if (it.node == _leftmost())
-							return Res(_leftmost(), _leftmost());
-						else if (_key_comp((--before).node->key(), key))
-						{
-							if (before->right_childnode) == 0)
-								return Res(0, before.node);
-							else
-								return Res(it.node, it.node);
-						}
-						else
-							return get_insert_unique_pos(key);
-					}
-					else if (_key_comp(it.node->key(), key))
-					{
-						iterator after = it;
-						if (it.node == _rightmost())
-							return Res(0, _rightmost());
-						else if (_key_comp(key, (++after).node->key()))
-						{
-							if (it->right_childnode) == 0)
-								return Res(0, it.node);
-							else
-								return Res(after.node, after.node);
-						}
-						else
-							return get_insert_unique_pos(key);
-					}
-					else
-						return Res(it.node, 0);
-				}
-
-				iterator	insert(Node_type x, Node_type y, const value_type& val)
-				{
-					bool		insert_left = (x != 0 || y == _end() || _key_comp((val).first, y->key));
-					Node_type	z = _create_node(val);
-
-					Avl_tree_insert_and_rebalance(insert_left, z, y, _header);
-					++_node_count;
-					return iterator(z);
-				}
-
-				Node_type	_copy(Const_Node_type src, Node_type parent)
-				{
-					Node_type node = _clone_node(src);
+					Node node = _clone_node(src);
 
 					node->parent = parent;
 					try
@@ -200,7 +118,7 @@ namespace ft
 						src = src->left_child;
 						while (src)
 						{
-							Node_type left_node = _clone_node(src);
+							Node left_node = _clone_node(src);
 							parent->left_child = left_node;
 							left_node->parent = parent;
 							if (src->right_child)
@@ -213,9 +131,9 @@ namespace ft
 					return node;
 				}
 
-				Node_type	_copy(const Avl_tree& src)
+				Node	_copy(const Avl_tree& src)
 				{
-					Node_type root = _copy(src._root(), NULL);
+					Node root = _copy(src._root(), NULL);
 
 					_leftmost() = _minimum(root);
 					_rightmost() = _maximum(root);
@@ -223,12 +141,12 @@ namespace ft
 					return root;
 				}
 
-				void		_delete(Node_type node)
+				void		_delete(Node node)
 				{
 					while (node)
 					{
 						_delete(node->right_child);
-						Node_type tmp = node->left_child;
+						Node tmp = node->left_child;
 						_destroy_node(node);
 						node = tmp;
 					}
@@ -237,8 +155,8 @@ namespace ft
 				void	_reset()
 				{		
 					_header.parent = NULL;
-					_header.left = &_header;
-					_header.right = &_header;
+					_header.left_child = &_header;
+					_header.right_child = &_header;
 					_node_count = 0;
 				}
 
@@ -295,21 +213,126 @@ namespace ft
 
 	// Modifiers
 	
+			private:
+				pair<Node, Node>	_get_insert_unique_pos(const key_type& key)
+				{
+					typedef pair<Node, Node> Result;
+					Node	x = _root();
+					Node	y = _end();
+
+					iterator	j = find(key);
+					if (j != end())
+						return Result(j.node, NULL);
+					while (x)
+					{
+						y = x;
+						if (_key_comp(key, x->key()))
+							x = x->left_child;
+						else
+							x = x->right_child;
+					}
+					return Result(x, y);
+				}
+
+				pair<Node, Node>	_get_insert_hint_pos(const_iterator pos, const key_type& key)
+				{
+					typedef pair<Node, Node> Result;
+					iterator	it_pos = pos._const_cast();
+
+					if (it_pos.node == _end())
+					{
+						if (size() > 0 && _key_comp(_rightmost()->key(), key))
+							return Result(NULL, _rightmost());
+						else
+							return _get_insert_unique_pos(key);
+					}
+					else if (_key_comp(key, it_pos.node->key()))
+					{
+						if (it_pos.node == _leftmost())	
+							return Result(_leftmost(), _leftmost());
+
+						iterator before = it_pos;
+						--before;
+						if (_key_comp(before.node->key(), key))
+						{
+							// if (before.node->right_child == NULL)
+							if (before->right_child == NULL)
+								return Result(NULL, before.node);
+							else
+								return Result(it_pos.node, it_pos.node);
+						}
+						else
+							return _get_insert_unique_pos(key);
+					}
+					else if (_key_comp(it_pos.node->key(), key))
+					{
+						if (it_pos.node == _rightmost())
+							return Result(NULL, _rightmost());
+
+						iterator after = it_pos;
+						++after;
+						if (_key_comp(key, after.node->key()))
+						{
+							// if (it_pos.node->right_child == NULL)
+							if (it_pos.node->right_child == NULL)
+								return Result(NULL, it_pos.node);
+							else
+								return Result(after.node, after.node);
+						}
+						else
+							return _get_insert_unique_pos(key);
+					}
+					else
+						return Result(it_pos.node, NULL);
+				}
+
+				iterator	_insert(Node x, Node parent, const value_type& val)
+				{
+					Node	node = _create_node(val);
+
+					node->parent = parent;
+					node->left_child = NULL;
+					node->right_child = NULL;
+					node->height = 1;
+
+					if (x != 0 || parent == _end() || _key_comp(val.first, parent->key)) // insert left
+					{
+						parent->left_child = node;
+						if (parent == _end())
+						{
+							_header.parent = node;
+							_header.right_child = node;
+						}
+						else if (parent == _begin())
+							_begin() = node;
+					}
+					else // insert right
+					{
+						parent->right_child = node;
+						if (parent == _end())
+							_end() = node;
+					}
+					Avl_tree_rebalance_after_insert(node, parent, _root());
+					++_node_count;
+					return iterator(node);
+				}
+
+			public:
 				pair<iterator, bool>	insert_unique(const value_type& val)
 				{
-					pair<Node_type, Node_type>	res = get_insert_unique_pos((val).first);
+					pair<Node, Node>	result = _get_insert_unique_pos(val.first);
 
-					if (res.second)
-						return pair<iterator, bool>(insert(res.first, res.second, val), true);
-					return pair<iterator, bool>(iterator(res.first), false);
+					if (result.second)
+						return pair<iterator, bool>(_insert(result.first, result.second, val), true);
+					return pair<iterator, bool>(iterator(result.first), false);
 				}
 
 				iterator	insert_hint(const_iterator pos, const value_type& val)
 				{
-					pair<Node_type, Node_type>	res = get_insert_hint_pos(pos, (val).first);
+					pair<Node, Node>	res = _get_insert_hint_pos(pos, val.first);
 					
 					if (res.second)
-						return insert(res.first, res.second, val);
+						return _insert(res.first, res.second, val);
 					return iterator(res.first);
 				}
 
@@ -323,7 +346,7 @@ namespace ft
 			private:
 				void	erase_aux(const_iterator pos)
 				{
-					Node_type	node = static_cast<Node_type>(Avl_tree_rebalance_for_erase(const_cast<Node_type>(pos.node), _header));
+					Node	node = static_cast<Node>(Avl_tree_rebalance_for_erase(const_cast<Node>(pos.node), _header));
 					_destroy_node(node);
 					--_node_count;
 				}
@@ -404,8 +427,8 @@ namespace ft
 
 				iterator		lower_bound(const key_type& key)
 				{
-					Node_type current = root();
-					Node_type result = end();
+					Node current = root();
+					Node result = end();
 
 					while (current)
 					{
@@ -440,8 +463,8 @@ namespace ft
 
 				iterator		upper_bound(const key_type& key)
 				{
-					Node_type current = root();
-					Node_type result = end();
+					Node current = root();
+					Node result = end();
 
 					while (current)
 					{
@@ -495,6 +518,69 @@ namespace ft
 	// Allocator
 	
 				allocator_type			get_allocator() const		{ return allocator_type(_allocator); }
+
+	// Affichage arbre
+
+		// public:
+        //     struct Trunk
+        //     {
+        //         Trunk *prev;
+        //         std::string str;
+            
+        //         Trunk(Trunk *prev, std::string str)
+        //         {
+        //             this->prev = prev;
+        //             this->str = str;
+        //         }
+        //     };
+
+        //     void showTrunks(Trunk *p)
+        //     {
+        //         if (p == nullptr)
+        //             return;
+        //         showTrunks(p->prev);
+        //         std::cout << p->str;
+        //     }
+
+        //     void printTree(pointer root, Trunk *prev, bool isLeft)
+        //     {
+        //         if (root == nullptr)
+        //             return;
+        //         std::string prev_str = "    ";
+        //         Trunk *trunk = new Trunk(prev, prev_str);
+            
+        //         printTree(static_cast<pointer>(root->right_child), trunk, true);
+            
+        //         if (!prev)
+        //             trunk->str = "———";
+        //         else if (isLeft)
+        //         {
+        //             trunk->str = "┌———";
+        //             prev_str = "    |";
+        //         }
+        //         else {
+        //             trunk->str = "└──";
+        //             prev->str = prev_str;
+        //         }
+            
+        //         showTrunks(trunk);
+        //         if (root->is_black == false)
+        //             std::cout << "\033[31m" << root->pair.first << "\033[0m" << std::endl;
+        //         else
+        //             std::cout << root->pair.first << std::endl;
+                    
+        //         if (prev) {
+        //             prev->str = prev_str;
+        //         }
+        //         trunk->str = "    |";
+            
+        //         printTree(static_cast<pointer>(root->left_child), trunk, false);
+        //     }
+
+        //     void print()
+        //     {
+        //         printTree(static_cast<pointer>(_root), NULL, false);
+        //     }
 		};
 
 	// Non member functions overload
@@ -502,11 +588,11 @@ namespace ft
 		template<typename Key, typename Val, typename Compare, typename Alloc>
 			bool	operator==(const Avl_tree<Key, Val, Compare, Alloc>& x, const Avl_tree<Key, Val, Compare, Alloc>& y)	{ return x.size() == y.size() && ft::equal(x.begin(), x.end(), y.begin()); }
 		template<typename Key, typename Val, typename Compare, typename Alloc>
-			bool	operator<(const Avl_tree<Key, Val, Compare, Alloc>& x, const Avl_tree<Key, Val, Compare, Alloc>& y)	{ return ft::lexicographical_compare(x.begin(), x.end(), y.begin(), y.end()); }
+			bool	operator<(const Avl_tree<Key, Val, Compare, Alloc>& x, const Avl_tree<Key, Val, Compare, Alloc>& y)		{ return ft::lexicographical_compare(x.begin(), x.end(), y.begin(), y.end()); }
 		template<typename Key, typename Val, typename Compare, typename Alloc>
 			bool	operator!=(const Avl_tree<Key, Val, Compare, Alloc>& x, const Avl_tree<Key, Val, Compare, Alloc>& y)	{ return !(x == y); }
 		template<typename Key, typename Val, typename Compare, typename Alloc>
-			bool	operator>(const Avl_tree<Key, Val, Compare, Alloc>& x, const Avl_tree<Key, Val, Compare, Alloc>& y)	{ return y < x; }
+			bool	operator>(const Avl_tree<Key, Val, Compare, Alloc>& x, const Avl_tree<Key, Val, Compare, Alloc>& y)		{ return y < x; }
 		template<typename Key, typename Val, typename Compare, typename Alloc>
 			bool	operator<=(const Avl_tree<Key, Val, Compare, Alloc>& x, const Avl_tree<Key, Val, Compare, Alloc>& y)	{ return !(y < x); }
 		template<typename Key, typename Val, typename Compare, typename Alloc>

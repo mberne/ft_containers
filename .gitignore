@@ -3,7 +3,6 @@
 objs/
 test_outputs/
 mycontainers
-*.txt
 
 # Prerequisites
 *.d

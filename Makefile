@@ -17,7 +17,8 @@ PATH_OUT	=		test_outputs/
  
 SRCS		=		main.cpp			\
 					tests_vector.cpp	\
-					tests_stack.cpp
+					tests_stack.cpp		\
+					tests_map.cpp
 
 #~~~~ Objects ~~~~#
 
@@ -25,7 +26,7 @@ OBJS		=		$(addprefix $(PATH_OBJ), $(SRCS:.cpp=.o))
 
 #~~~~ Includes ~~~~#
 
-INCS		=		$(addprefix $(PATH_INC), iterator.hpp iterator_traits.hpp reverse_iterator.hpp enable_if.hpp is_integral.hpp equal.hpp lexicographical_compare.hpp vector.hpp)
+INCS		=		$(addprefix $(PATH_INC), iterator.hpp iterator_traits.hpp reverse_iterator.hpp enable_if.hpp is_integral.hpp equal.hpp lexicographical_compare.hpp vector.hpp stack.hpp pair.hpp avl_tree_iterator.hpp avl_tree_rebalance.hpp avl_tree.hpp map.hpp)
 
 #~~~~ Macros ~~~~#
 
@@ -55,12 +56,6 @@ diff :
 				diff $(PATH_OUT)std_out.txt $(PATH_OUT)ft_out.txt
 
 re :				fclean all
-
-#~~~~ Compilation Rules ~~~~#
-
-# $(PATH_OBJ)%.o :	%.cpp $(INCS)
-# 					@mkdir -p $(dir $@);
-# 					$(CC) $(CFLAGS) -c $< -o $@ -I$(PATH_INC)
 
 #~~~~ Cleaning Rules ~~~~#
 

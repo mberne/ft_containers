@@ -5,11 +5,12 @@
 #ifdef STD
 	#include <vector>
 	#include <stack>
-	// #include <map>
+	#include <map>
 	namespace ft = std;
 #else
 	#include "vector.hpp"
 	#include "stack.hpp"
+	#include "map.hpp"
 #endif
 
 using std::cout;
@@ -17,7 +18,7 @@ using std::endl;
 
 void	test_vector();
 void	test_stack();
-// void	test_map(); et include dans le Makefile
+void	test_map();
 
 int main()
 {
@@ -318,11 +319,13 @@ int main()
 
 	test_stack();
 
-	// cout << endl << "----------Map----------" << endl << endl;
-	
-	// cout << endl << "----------Tester----------" << endl << endl;
+	cout << endl << "----------Map----------" << endl << endl;
 
-	// test_map();
+	//
+	
+	cout << endl << "----------Tester----------" << endl << endl;
+
+	test_map();
 
 	return (0);
 }
