@@ -16,9 +16,9 @@ namespace ft
 	template<typename T>
 		static int	get_highest_child(Avl_tree_node<T>* node)
 		{
-			if (node = NULL)
+			if (node == NULL || node->left_child->height == node->right_child->height)
 				return NULL;
-			if (node->left_child->height >= node->right_child->height)
+			if (node->left_child->height > node->right_child->height)
 				return node->left_child;
 			return node->right_child;
 		}
@@ -139,7 +139,7 @@ namespace ft
 				if (balance > 1)
 				{
 					//LR
-					if (x == y->left_child)
+					if (x && x == y->left_child)
 					{
 						Avl_tree_rotate_left(y, root);
 						y = y->parent;
@@ -151,7 +151,7 @@ namespace ft
 				else if (balance < -1)
 				{
 					//RL
-					if (x == y->right_child)
+					if (x && x == y->right_child)
 					{
 						Avl_tree_rotate_right(y, root);
 						y = y->parent;
