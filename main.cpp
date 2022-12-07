@@ -325,7 +325,7 @@ int main()
 	
 	cout << endl << "----------Tester----------" << endl << endl;
 
-	test_map();
+	// test_map();
 
 	return (0);
 }

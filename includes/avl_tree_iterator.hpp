@@ -1,10 +1,47 @@
 #ifndef AVL_TREE_ITERATOR_HPP
 # define AVL_TREE_ITERATOR_HPP
 
-# include "avl_tree.hpp"
+# include "iterator_traits.hpp"
 
 namespace ft
 {
+	// Node structure
+
+	template<typename Val>
+		struct	Avl_tree_node
+		{
+			typedef Avl_tree_node<Val>* 		Node;
+			typedef const Avl_tree_node<Val>*	Const_Node;
+			typedef Val							value_type;
+			typedef typename Val::first_type	key_type;
+
+			Node		parent;
+			Node		left_child;
+			Node		right_child;
+			value_type	value;
+			int			height;
+
+			key_type			key()			{ return value.first; }
+			value_type*			valptr()		{ return &value; }
+			const value_type*	valptr() const	{ return &value; }
+
+			Node	minimum()
+			{
+				Node tmp = *this;
+				while (tmp->left_child)
+					tmp = tmp->left_child;
+				return tmp;
+			}
+
+			Node	maximum()
+			{
+				Node tmp = *this;
+				while (tmp->right_child)
+					tmp = tmp->right_child;
+				return tmp;
+			}
+		};
+
 	// Utils
 
 	template<typename T>
@@ -71,19 +108,19 @@ namespace ft
 				typedef	iterator_traits<T>	traits_type;
 		
 			public:
-				Node_type	node;
-
 				typedef typename traits_type::difference_type	difference_type;
-				typedef Avl_tree_node<T>*				        Node_type;
+				typedef Avl_tree_node<T>*				        Node;
 				typedef typename traits_type::value_type		value_type;
 				typedef typename traits_type::pointer			pointer;
 				typedef typename traits_type::reference			reference;
 				typedef std::bidirectional_iterator_tag		    iterator_category;
 		
+				Node	node;
+
 	// Constructors
 
 				Avl_tree_iterator() : node() {}
-				explicit Avl_tree_iterator(Node_type src) : node(src) {}
+				explicit Avl_tree_iterator(Node src) : node(src) {}
 
 	// Member functions
 		
@@ -114,7 +151,7 @@ namespace ft
 
 			private:
 				template<typename T1>
-					friend bool		operator==(const Avl_tree_iterator<T1>& current, const Avl_tree_iterator<T1>& y)
+					friend bool		operator==(const Avl_tree_iterator<T1>& current, const Avl_tree_iterator<T1>& y);
 		};
 
 	// Non member functions overload
@@ -133,26 +170,26 @@ namespace ft
 				typedef	iterator_traits<T>	traits_type;
 		
 			public:
-				Node_type	node;
-
 				typedef Avl_tree_iterator<T>	iterator;
 
 				typedef typename traits_type::difference_type	difference_type;
-				typedef const Avl_tree_node<T>*					Node_type;
+				typedef const Avl_tree_node<T>*					Node;
 				typedef typename traits_type::value_type		value_type;
 				typedef typename traits_type::pointer			pointer;
 				typedef typename traits_type::reference			reference;
 				typedef std::bidirectional_iterator_tag		    iterator_category;
 
+				Node	node;
+
 	// Constructors
 
 				Avl_tree_const_iterator() : node() {}
-				explicit Avl_tree_const_iterator(Node_type src) : node(src) {}
+				explicit Avl_tree_const_iterator(Node src) : node(src) {}
 				Avl_tree_const_iterator(const iterator& it) : node(it.node) {}
 
 	// Member functions
 
-				iterator	_const_cast() const	{ return iterator(const_cast<typename iterator::Node_type>(node)); }
+				iterator	_const_cast() const	{ return iterator(const_cast<typename iterator::Node>(node)); }
 
 				reference	operator*() const	{ return *node->valptr(); }
 				pointer		operator->() const	{ return node->valptr(); }
@@ -182,7 +219,7 @@ namespace ft
 
 			private:
 				template<typename T1>
-					friend bool		operator==(const Avl_tree_const_iterator<T1>& current, const Avl_tree_const_iterator<T1>& y)
+					friend bool		operator==(const Avl_tree_const_iterator<T1>& current, const Avl_tree_const_iterator<T1>& y);
 		};
 
 	// Non member functions overload
