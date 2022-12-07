@@ -88,7 +88,11 @@ namespace ft
 	// Element access
 
 				mapped_type& operator[](const key_type& k) {
-					; // TODO
+					iterator it = lower_bound(k);
+
+					if (it == end() || key_comp()(k, (*it).first))
+						it = insert(it, value_type(k, mapped_type()));
+					return (*it).second;
 				};
 
 	// Modifiers

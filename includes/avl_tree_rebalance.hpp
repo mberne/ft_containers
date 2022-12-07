@@ -6,7 +6,7 @@
 namespace ft
 {
 	template<typename T>
-		static int		get_height(Avl_tree_node<T>* node)
+		static int	get_height(Avl_tree_node<T>* node)
 		{
 			if (node == NULL)
 				return 0;
@@ -14,7 +14,7 @@ namespace ft
 		}
 
 	template<typename T>
-		static int		get_highest_child(Avl_tree_node<T>* node)
+		static int	get_highest_child(Avl_tree_node<T>* node)
 		{
 			if (node = NULL)
 				return NULL;
@@ -82,6 +82,7 @@ namespace ft
 			Avl_tree_node<T>* &end = &_header;
 			Avl_tree_node<T>* const y = NULL;
 			Avl_tree_node<T>* const x = NULL;
+
 			while (z != end)
 			{
 				int const	balance = get_height(z->left_child) - get_height(z->right_child);
@@ -129,6 +130,7 @@ namespace ft
 			Avl_tree_node<T>*		&end = &_header;
 			Avl_tree_node<T>* const y = NULL;
 			Avl_tree_node<T>* const x = NULL;
+			
 			while (z != end)
 			{
 				z->height = std::max(get_height(z->left_child), get_height(z->right_child)) + 1;

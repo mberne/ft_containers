@@ -137,10 +137,7 @@ namespace ft
 
 	// Constructors
 
-				Avl_tree(const Compare& comp, const allocator_type& alloc = allocator_type()) : _key_comp(comp), _allocator(alloc)
-				{
-					_reset();
-				}
+				Avl_tree(const Compare& comp, const allocator_type& alloc = allocator_type()) : _key_comp(comp), _allocator(alloc) { _reset(); }
 
 				Avl_tree(const Avl_tree& src) : _key_comp(src._key_comp), _allocator(src._allocator)
 				{

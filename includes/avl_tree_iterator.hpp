@@ -95,7 +95,7 @@ namespace ft
 		}
 
 	template<typename T>
-		Avl_tree_node<T>*		Avl_tree_decrement(Avl_tree_node<T>* current) throw ()		{ return _Avl_tree_decrement(current); }
+		Avl_tree_node<T>*		Avl_tree_decrement(Avl_tree_node<T>* current) throw ()			{ return _Avl_tree_decrement(current); }
 	template<typename T>
 		const Avl_tree_node<T>*	Avl_tree_decrement(const Avl_tree_node<T>* current) throw ()	{ return _Avl_tree_decrement(const_cast<Avl_tree_node<T>*>(current)); }
 
@@ -167,10 +167,10 @@ namespace ft
 		struct Avl_tree_const_iterator
 		{
 			protected:
-				typedef	iterator_traits<T>	traits_type;
+				typedef	iterator_traits<T>						traits_type;
 		
 			public:
-				typedef Avl_tree_iterator<T>	iterator;
+				typedef Avl_tree_iterator<T>					iterator;
 
 				typedef typename traits_type::difference_type	difference_type;
 				typedef const Avl_tree_node<T>*					Node;
