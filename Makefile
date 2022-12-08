@@ -9,7 +9,6 @@ FT_OUT		=		ft_tests.out
 
 #~~~~ Paths ~~~~#
 
-PATH_OBJ	=		objs/
 PATH_INC	=		includes/
 PATH_OUT	=		test_outputs/
 
@@ -19,10 +18,6 @@ SRCS		=		main.cpp			\
 					tests_vector.cpp	\
 					tests_stack.cpp		\
 					tests_map.cpp
-
-#~~~~ Objects ~~~~#
-
-OBJS		=		$(addprefix $(PATH_OBJ), $(SRCS:.cpp=.o))
 
 #~~~~ Includes ~~~~#
 
@@ -51,18 +46,15 @@ $(FT_OUT) :		$(SRCS) $(INCS)
 				@mkdir -p $(PATH_OUT)
 				$(CC) $(CFLAGS) $(SRCS) -o $(FT_OUT) -I$(PATH_INC)
 
-diff :			
+diff :			all
 				./$(STD_OUT) > $(PATH_OUT)std_out.txt | ./$(FT_OUT) > $(PATH_OUT)ft_out.txt
 				diff $(PATH_OUT)std_out.txt $(PATH_OUT)ft_out.txt
 
-re :				fclean all
+re :			fclean all
 
 #~~~~ Cleaning Rules ~~~~#
 
-clean :
-					$(RM) $(PATH_OBJ)
+fclean :
+					$(RM) $(STD_OUT) $(FT_OUT) $(PATH_OUT)
 
-fclean :			clean
-					$(RM) $(NAME)
-
-.PHONY:				all clean fclean re
+.PHONY:				all fclean re
