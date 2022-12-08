@@ -22,12 +22,13 @@ namespace ft
 			int			height;
 
 			key_type			key()			{ return value.first; }
+			const key_type		key() const		{ return value.first; }
 			value_type*			valptr()		{ return &value; }
 			const value_type*	valptr() const	{ return &value; }
 
 			Node	minimum()
 			{
-				Node tmp = *this;
+				Node tmp = this;
 				while (tmp->left_child)
 					tmp = tmp->left_child;
 				return tmp;
@@ -35,7 +36,7 @@ namespace ft
 
 			Node	maximum()
 			{
-				Node tmp = *this;
+				Node tmp = this;
 				while (tmp->right_child)
 					tmp = tmp->right_child;
 				return tmp;
@@ -74,7 +75,9 @@ namespace ft
 	template<typename T>
 		static Avl_tree_node<T>*	_Avl_tree_decrement(Avl_tree_node<T>* current) throw ()
 		{
-			if (current->left_child)
+			if (current == current->parent->parent)
+				current = current->right_child;
+			else if (current->left_child)
 			{
 				Avl_tree_node<T>* rightmost = current->left_child;
 				while (rightmost->right_child)
@@ -104,130 +107,103 @@ namespace ft
 	template<typename T>
 		struct Avl_tree_iterator
 		{
-			protected:
-				typedef	iterator_traits<T>	traits_type;
-		
-			public:
-				typedef typename traits_type::difference_type	difference_type;
-				typedef Avl_tree_node<T>*				        Node;
-				typedef typename traits_type::value_type		value_type;
-				typedef typename traits_type::pointer			pointer;
-				typedef typename traits_type::reference			reference;
-				typedef std::bidirectional_iterator_tag		    iterator_category;
-		
-				Node	node;
+			typedef ptrdiff_t							difference_type;
+			typedef Avl_tree_node<T>*					Node;
+			typedef T									value_type;
+			typedef T*									pointer;
+			typedef T&									reference;
+			typedef std::bidirectional_iterator_tag		iterator_category;
+	
+			Node	node;
 
 	// Constructors
 
-				Avl_tree_iterator() : node() {}
-				explicit Avl_tree_iterator(Node src) : node(src) {}
+			Avl_tree_iterator() : node() {}
+			explicit Avl_tree_iterator(Node src) : node(src) {}
 
 	// Member functions
-		
-				reference	operator*() const	{ return *node->valptr(); }
-				pointer		operator->() const	{ return node->valptr(); }
-				Avl_tree_iterator		&operator++()
-				{
-					node = Avl_tree_increment(node);
-					return *this;
-				}
-				Avl_tree_iterator		operator++(int)
-				{
-					Avl_tree_iterator tmp = *this;
-					node = Avl_tree_increment(node);
-					return tmp;
-				}
-				Avl_tree_iterator		&operator--()
-				{
-					node = Avl_tree_decrement(node);
-					return *this;
-				}
-				Avl_tree_iterator		operator--(int)
-				{
-					Avl_tree_iterator tmp = *this;
-					node = Avl_tree_decrement(node);
-					return tmp;
-				}
+	
+			reference	operator*() const	{ return *node->valptr(); }
+			pointer		operator->() const	{ return node->valptr(); }
+			Avl_tree_iterator		&operator++()
+			{
+				node = Avl_tree_increment(node);
+				return *this;
+			}
+			Avl_tree_iterator		operator++(int)
+			{
+				Avl_tree_iterator tmp = *this;
+				node = Avl_tree_increment(node);
+				return tmp;
+			}
+			Avl_tree_iterator		&operator--()
+			{
+				node = Avl_tree_decrement(node);
+				return *this;
+			}
+			Avl_tree_iterator		operator--(int)
+			{
+				Avl_tree_iterator tmp = *this;
+				node = Avl_tree_decrement(node);
+				return tmp;
+			}
 
-			private:
-				template<typename T1>
-					friend bool		operator==(const Avl_tree_iterator<T1>& current, const Avl_tree_iterator<T1>& y);
+			friend bool		operator==(const Avl_tree_iterator& x, const Avl_tree_iterator& y)	{ return x.node == y.node; }
+			friend bool		operator!=(const Avl_tree_iterator& x, const Avl_tree_iterator& y)	{ return x.node != y.node; }
 		};
-
-	// Non member functions overload
-
-	template<typename T>
-		bool		operator==(const Avl_tree_iterator<T>& current, const Avl_tree_iterator<T>& y)	{ return current.node == y.node; }
-	template<typename T>
-		bool		operator!=(const Avl_tree_iterator<T>& current, const Avl_tree_iterator<T>& y)	{ return !(current == y); }
 
 	// Const iterator
 
 	template<typename T>
 		struct Avl_tree_const_iterator
 		{
-			protected:
-				typedef	iterator_traits<T>						traits_type;
-		
-			public:
-				typedef Avl_tree_iterator<T>					iterator;
+			typedef Avl_tree_iterator<T>				iterator;
+			typedef ptrdiff_t							difference_type;
+			typedef const Avl_tree_node<T>*				Node;
+			typedef T									value_type;
+			typedef const T*							pointer;
+			typedef const T&							reference;
+			typedef std::bidirectional_iterator_tag		iterator_category;
 
-				typedef typename traits_type::difference_type	difference_type;
-				typedef const Avl_tree_node<T>*					Node;
-				typedef typename traits_type::value_type		value_type;
-				typedef typename traits_type::pointer			pointer;
-				typedef typename traits_type::reference			reference;
-				typedef std::bidirectional_iterator_tag		    iterator_category;
-
-				Node	node;
+			Node	node;
 
 	// Constructors
 
-				Avl_tree_const_iterator() : node() {}
-				explicit Avl_tree_const_iterator(Node src) : node(src) {}
-				Avl_tree_const_iterator(const iterator& it) : node(it.node) {}
+			Avl_tree_const_iterator() : node() {}
+			explicit Avl_tree_const_iterator(Node src) : node(src) {}
+			Avl_tree_const_iterator(const iterator& it) : node(it.node) {}
 
 	// Member functions
 
-				iterator	_const_cast() const	{ return iterator(const_cast<typename iterator::Node>(node)); }
+			reference	operator*() const	{ return *node->valptr(); }
+			pointer		operator->() const	{ return node->valptr(); }
 
-				reference	operator*() const	{ return *node->valptr(); }
-				pointer		operator->() const	{ return node->valptr(); }
+			Avl_tree_const_iterator	&operator++()
+			{
+				node = Avl_tree_increment(node);
+				return *this;
+			}
+			Avl_tree_const_iterator	operator++(int)
+			{
+				Avl_tree_const_iterator tmp = *this;
+				node = Avl_tree_increment(node);
+				return tmp;
+			}
+			Avl_tree_const_iterator	&operator--()
+			{
+				node = Avl_tree_decrement(node);
+				return *this;
+			}
+			Avl_tree_const_iterator	operator--(int)
+			{
+				Avl_tree_const_iterator tmp = *this;
+				node = Avl_tree_decrement(node);
+				return tmp;
+			}
 
-				Avl_tree_const_iterator	&operator++()
-				{
-					node = Avl_tree_increment(node);
-					return *this;
-				}
-				Avl_tree_const_iterator	operator++(int)
-				{
-					Avl_tree_const_iterator tmp = *this;
-					node = Avl_tree_increment(node);
-					return tmp;
-				}
-				Avl_tree_const_iterator	&operator--()
-				{
-					node = Avl_tree_decrement(node);
-					return *this;
-				}
-				Avl_tree_const_iterator	operator--(int)
-				{
-					Avl_tree_const_iterator tmp = *this;
-					node = Avl_tree_decrement(node);
-					return tmp;
-				}
-
-			private:
-				template<typename T1>
-					friend bool		operator==(const Avl_tree_const_iterator<T1>& current, const Avl_tree_const_iterator<T1>& y);
+			friend bool		operator==(const Avl_tree_const_iterator& x, const Avl_tree_const_iterator& y)	{ return x.node == y.node; }
+			friend bool		operator!=(const Avl_tree_const_iterator& x, const Avl_tree_const_iterator& y)	{ return x.node != y.node; }
 		};
-
-	// Non member functions overload
-
-	template<typename T>
-		bool		operator==(const Avl_tree_const_iterator<T>& current, const Avl_tree_const_iterator<T>& y)	{ return current.node == y.node; }
-	template<typename T>
-		bool		operator!=(const Avl_tree_const_iterator<T>& current, const Avl_tree_const_iterator<T>& y)	{ return !(current == y); }
 }
 
 #endif

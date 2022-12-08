@@ -217,13 +217,7 @@ int main()
 
 	cout << "Create a fourth str vector with iterators and a fifth with copy constructor." << endl;
 
-	cout << endl << endl << endl << "===================== Bruh" << endl << endl << endl;
-		for(it = str_vector.begin(); it < str_vector.end(); ++it)
-		cout << *it << endl;
-	cout << str_vector.size() << " | " << str_vector.capacity() << endl;
-
 	ft::vector<std::string> str_vector_4(str_vector.begin(), str_vector.end());
-	cout << endl << endl << endl << "===================== Bruh" << endl << endl << endl;
 	for(it = str_vector_4.begin(); it < str_vector_4.end(); ++it)
 		cout << *it << endl;
 	ft::vector<std::string> str_vector_5(str_vector_3);
@@ -321,11 +315,176 @@ int main()
 
 	cout << endl << "----------Map----------" << endl << endl;
 
-	//
+	cout << "Create int map and test size, empty and max_size." << endl;
+
+	ft::map<int, char> map_int_char;
+	if (map_int_char.empty())
+		cout << "map_int_char is empty." << endl;
+	else
+		cout << "map_int_char isn't empty." << endl;
+	map_int_char.insert(ft::make_pair<int, char>(100, 'a'));
+	map_int_char.insert(ft::make_pair<int, char>(10, 'b'));
+	map_int_char.insert(ft::make_pair<int, char>(30, 'c'));
+	map_int_char.insert(ft::make_pair<int, char>(20, 'd'));
+	map_int_char.insert(ft::make_pair<int, char>(80, 'e'));
+	cout << "map_int_char max_size : " << map_int_char.max_size() << endl;
+	cout << "map_int_char size : " << map_int_char.size() << endl;
+	if (map_int_char.empty())
+		cout << "map_int_char is empty." << endl;
+	else
+		cout << "map_int_char isn't empty." << endl;
+	map_int_char.insert(ft::make_pair<int, char>(90, 'f'));
+	map_int_char.insert(ft::make_pair<int, char>(40, 'g'));
+	map_int_char.insert(ft::make_pair<int, char>(70, 'h'));
+	map_int_char.insert(ft::make_pair<int, char>(60, 'i'));
+	map_int_char.insert(ft::make_pair<int, char>(50, 'j'));
+	cout << "map_int_char size : " << map_int_char.size() << endl;
+	cout << "map_int_char max_size : " << map_int_char.max_size() << endl;
+
+	for(ft::map<int, char>::iterator it = map_int_char.begin(); it != map_int_char.end(); ++it)
+		cout << "Key : " << it->first << " | Value : " << it->second << endl;
+
+	cout << "Test clear." << endl;
 	
+	map_int_char.clear();
+	for(ft::map<int, char>::iterator it = map_int_char.begin(); it != map_int_char.end(); ++it)
+		cout << "Key : " << it->first << " | Value : " << it->second << endl;
+	cout << "map_int_char size : " << map_int_char.size() << endl;
+	if (map_int_char.empty())
+		cout << "map_int_char is empty." << endl;
+	else
+		cout << "map_int_char isn't empty." << endl;
+
+	cout << "Insert again." << endl;
+
+	map_int_char.insert(ft::make_pair<int, char>(30, 'c'));
+	map_int_char.insert(ft::make_pair<int, char>(60, 'i'));
+	map_int_char.insert(ft::make_pair<int, char>(80, 'e'));
+	map_int_char.insert(ft::make_pair<int, char>(100, 'a'));
+	map_int_char.insert(ft::make_pair<int, char>(90, 'f'));
+	map_int_char.insert(ft::make_pair<int, char>(40, 'g'));
+	map_int_char.insert(ft::make_pair<int, char>(20, 'd'));
+	map_int_char.insert(ft::make_pair<int, char>(70, 'h'));
+	map_int_char.insert(ft::make_pair<int, char>(10, 'b'));
+	map_int_char.insert(ft::make_pair<int, char>(50, 'j'));
+	for(ft::map<int, char>::iterator it = map_int_char.begin(); it != map_int_char.end(); ++it)
+		cout << "Key : " << it->first << " | Value : " << it->second << endl;
+
+	cout << "Construct a map with copy and insert." << endl;
+	
+	ft::map<int, char> map_int_char_compare(map_int_char);
+	map_int_char_compare.insert(ft::make_pair<int, char>(25, 'k'));
+	map_int_char_compare.insert(ft::make_pair<int, char>(5, 'l'));
+	map_int_char_compare.insert(ft::make_pair<int, char>(85, 'm'));
+	map_int_char_compare.insert(ft::make_pair<int, char>(95, 'n'));
+	map_int_char_compare.insert(ft::make_pair<int, char>(15, 'o'));
+	for(ft::map<int, char>::iterator it = map_int_char_compare.begin(); it != map_int_char_compare.end(); ++it)
+		cout << "Key : " << it->first << " | Value : " << it->second << endl;
+
+	cout << "Test non member functions overload." << endl;
+
+	if (map_int_char == map_int_char_compare)
+		cout << "map_int_char is equal to map_int_char_compare." << endl;
+	else
+		cout << "map_int_char isn't equal to map_int_char_compare." << endl;
+	if (map_int_char != map_int_char_compare)
+		cout << "map_int_char is different to map_int_char_compare." << endl;
+	else
+		cout << "map_int_char isn't different to map_int_char_compare." << endl;
+	if (map_int_char < map_int_char_compare)
+		cout << "map_int_char is less than map_int_char_compare." << endl;
+	else
+		cout << "map_int_char isn't less than map_int_char_compare." << endl;
+	if (map_int_char <= map_int_char_compare)
+		cout << "map_int_char is less or equal to map_int_char_compare." << endl;
+	else
+		cout << "map_int_char isn't less or equal to map_int_char_compare." << endl;
+	if (map_int_char > map_int_char_compare)
+		cout << "map_int_char is greater than map_int_char_compare." << endl;
+	else
+		cout << "map_int_char isn't greater than map_int_char_compare." << endl;
+	if (map_int_char >= map_int_char_compare)
+		cout << "map_int_char is greater or equal to map_int_char_compare." << endl;
+	else
+		cout << "map_int_char isn't greater or equal to map_int_char_compare." << endl;
+	
+	cout << "Test swap." << endl;
+
+	map_int_char.swap(map_int_char_compare);
+	for(ft::map<int, char>::iterator it = map_int_char_compare.begin(); it != map_int_char_compare.end(); ++it)
+		cout << "Key : " << it->first << " | Value : " << it->second << endl;
+
+	cout << "Insert with iterators." << endl;
+
+	map_int_char_compare.insert(map_int_char.begin(), map_int_char.end());
+	for(ft::map<int, char>::iterator it = map_int_char_compare.begin(); it != map_int_char_compare.end(); ++it)
+		cout << "Key : " << it->first << " | Value : " << it->second << endl;
+
+	cout << "Operator= with new map." << endl;
+
+	ft::map<int, char> map_int_char_2;
+	map_int_char_2 = map_int_char;
+	for(ft::map<int, char>::iterator it = map_int_char_2.begin(); it != map_int_char_2.end(); ++it)
+		cout << "Key : " << it->first << " | Value : " << it->second << endl;
+
+	cout << "Erase with find." << endl;
+
+	map_int_char_2.erase(map_int_char_2.find(15));
+	map_int_char_2.erase(map_int_char_2.find(95));
+	map_int_char_2.erase(map_int_char_2.find(5));
+	map_int_char_2.erase(map_int_char_2.find(25));
+	map_int_char_2.erase(map_int_char_2.find(85));
+	for(ft::map<int, char>::iterator it = map_int_char_2.begin(); it != map_int_char_2.end(); ++it)
+		cout << "Key : " << it->first << " | Value : " << it->second << endl;
+
+	cout << "Erase with iterators." << endl;
+
+	map_int_char_compare.erase(map_int_char_compare.begin(), map_int_char_compare.find(60));
+	for(ft::map<int, char>::iterator it = map_int_char_compare.begin(); it != map_int_char_compare.end(); ++it)
+		cout << "Key : " << it->first << " | Value : " << it->second << endl;
+
+	cout << "Count." << endl;
+
+	cout << "5 is in the map : " << map_int_char.count(5) << endl;
+	cout << "9 is in the map : " << map_int_char.count(9) << endl;
+	cout << "1 is in the map : " << map_int_char.count(1) << endl;
+	cout << "101 is in the map : " << map_int_char.count(101) << endl;
+
+	cout << "Upper_bound and lower_bound." << endl;
+	
+	cout << "2 lower_bound same as begin : " << (map_int_char_compare.lower_bound(2) == map_int_char_compare.begin()) << endl;
+	cout << "2 upper_bound same as begin : " << (map_int_char_compare.upper_bound(2) == map_int_char_compare.begin()) << endl;
+	cout << "103 lower_bound same as end : " << (map_int_char_compare.lower_bound(103) == map_int_char_compare.end()) << endl;
+	cout << "103 upper_bound same as end : " << (map_int_char_compare.upper_bound(103) == map_int_char_compare.end()) << endl;
+	cout << "24 lower_bound : " << map_int_char_compare.lower_bound(24)->first << endl;
+	cout << "24 upper_bound : " << map_int_char_compare.upper_bound(24)->first << endl;
+	cout << "25 lower_bound : " << map_int_char_compare.lower_bound(25)->first << endl;
+	cout << "25 upper_bound : " << map_int_char_compare.upper_bound(25)->first << endl;
+	cout << "26 lower_bound : " << map_int_char_compare.lower_bound(26)->first << endl;
+	cout << "26 upper_bound : " << map_int_char_compare.upper_bound(26)->first << endl;
+
+	cout << "Equal range." << endl;
+
+	cout << "2 same as begin : " << (map_int_char_compare.equal_range(2).first == map_int_char_compare.begin()) << endl;
+	cout << "2 same as begin : " << (map_int_char_compare.equal_range(2).second == map_int_char_compare.begin()) << endl;
+	cout << "103 same as end : " << (map_int_char_compare.equal_range(103).first == map_int_char_compare.end()) << endl;
+	cout << "103 same as end : " << (map_int_char_compare.equal_range(103).second == map_int_char_compare.end()) << endl;
+	cout << "24 : " << map_int_char_compare.equal_range(24).first->first << endl;
+	cout << "24 : " << map_int_char_compare.equal_range(24).second->first << endl;
+	cout << "25 : " << map_int_char_compare.equal_range(25).first->first << endl;
+	cout << "25 : " << map_int_char_compare.equal_range(25).second->first << endl;
+	cout << "26 : " << map_int_char_compare.equal_range(26).first->first << endl;
+	cout << "26 : " << map_int_char_compare.equal_range(26).second->first << endl;
+
+	cout << "Constructor with iterators." << endl;
+
+	ft::map<int, char> map_int_char_again(map_int_char_compare.begin(), ++map_int_char_compare.find(50));
+	for(ft::map<int, char>::iterator it = map_int_char_again.begin(); it != map_int_char_again.end(); ++it)
+		cout << "Key : " << it->first << " | Value : " << it->second << endl;
+
 	cout << endl << "----------Tester----------" << endl << endl;
 
-	// test_map();
+	test_map();
 
 	return (0);
 }

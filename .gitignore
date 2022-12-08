@@ -2,7 +2,6 @@
 .vscode
 objs/
 test_outputs/
-mycontainers
 
 # Prerequisites
 *.d

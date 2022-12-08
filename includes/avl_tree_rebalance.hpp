@@ -14,13 +14,16 @@ namespace ft
 		}
 
 	template<typename T>
-		static int	get_highest_child(Avl_tree_node<T>* node)
+		static Avl_tree_node<T>*	get_highest_child(Avl_tree_node<T>* node)
 		{
-			if (node == NULL || node->left_child->height == node->right_child->height)
+			if (node == NULL)
 				return NULL;
-			if (node->left_child->height > node->right_child->height)
+			else if (get_height(node->left_child) > get_height(node->right_child))
 				return node->left_child;
-			return node->right_child;
+			else if (get_height(node->right_child) > get_height(node->left_child))
+				return node->right_child;
+			else
+				return NULL;
 		}
 
 	template<typename T>
@@ -76,12 +79,12 @@ namespace ft
 		}
 
 	template<typename T>
-		void	Avl_tree_rebalance_after_insert(Avl_tree_node<T>* z, Avl_tree_node<T>* &header) throw ()
+		void	Avl_tree_rebalance_after_insert(Avl_tree_node<T>* z, Avl_tree_node<T> &header) throw ()
 		{
-			Avl_tree_node<T>* &root = header->parent;
-			Avl_tree_node<T>* &end = &_header;
-			Avl_tree_node<T>* const y = NULL;
-			Avl_tree_node<T>* const x = NULL;
+			Avl_tree_node<T>*	&root = header.parent;
+			Avl_tree_node<T>*	end = &header;
+			Avl_tree_node<T>*	y = NULL;
+			Avl_tree_node<T>*	x = NULL;
 
 			while (z != end)
 			{
@@ -124,12 +127,12 @@ namespace ft
 		}
 		
 	template<typename T>
-		void	Avl_tree_rebalance_after_erase(Avl_tree_node<T>* const z, Avl_tree_node<T>* &header) throw ()
+		void	Avl_tree_rebalance_after_erase(Avl_tree_node<T>* z, Avl_tree_node<T> &header) throw ()
 		{
-			Avl_tree_node<T>*		&root = header.parent;
-			Avl_tree_node<T>*		&end = &_header;
-			Avl_tree_node<T>* const y = NULL;
-			Avl_tree_node<T>* const x = NULL;
+			Avl_tree_node<T>*	&root = header.parent;
+			Avl_tree_node<T>*	end = &header;
+			Avl_tree_node<T>*	y = get_highest_child(z);
+			Avl_tree_node<T>*	x = get_highest_child(y);
 			
 			while (z != end)
 			{
@@ -139,7 +142,7 @@ namespace ft
 				if (balance > 1)
 				{
 					//LR
-					if (x && x == y->left_child)
+					if (x && x == y->right_child)
 					{
 						Avl_tree_rotate_left(y, root);
 						y = y->parent;
@@ -151,7 +154,7 @@ namespace ft
 				else if (balance < -1)
 				{
 					//RL
-					if (x && x == y->right_child)
+					if (x && x == y->left_child)
 					{
 						Avl_tree_rotate_right(y, root);
 						y = y->parent;

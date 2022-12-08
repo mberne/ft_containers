@@ -45,18 +45,16 @@ namespace ft
 				typedef typename allocator_type::reference			reference;
 				typedef typename allocator_type::const_reference	const_reference;
 				typedef typename Tree_type::iterator				iterator;
-				typedef typename Tree_type::iterator				const_iterator;
+				typedef typename Tree_type::const_iterator			const_iterator;
 				typedef typename Tree_type::reverse_iterator		reverse_iterator;
-				typedef typename Tree_type::reverse_iterator		const_reverse_iterator;
+				typedef typename Tree_type::const_reverse_iterator	const_reverse_iterator;
 				typedef typename Tree_type::difference_type			difference_type;
 				typedef typename Tree_type::size_type				size_type;
 
 	// Constructors
 
 				explicit map(const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()) : tree(comp, alloc) {}
-				map(const map& src) : tree(src) {}
-				template <class InputIterator>
-					map(InputIterator first, InputIterator last) { tree.insert_range(first, last); }
+				map(const map& src) : tree(src.tree) {}
 				template <class InputIterator>
 					map(InputIterator first, InputIterator last, const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()) : tree(comp, alloc) { tree.insert_range(first, last); }
 
@@ -104,7 +102,7 @@ namespace ft
 				void erase (iterator position)								{ tree.erase(position); }
 				size_type erase (const key_type& k)							{ return tree.erase(k); }
 				void erase (iterator first, iterator last)					{ tree.erase(first, last); }
-				void swap (map& src)										{ tree.swap(src); }
+				void swap (map& src)										{ tree.swap(src.tree); }
 				void clear()												{ tree.clear(); }
 
 	// Observers
@@ -127,6 +125,11 @@ namespace ft
 	// Allocator
 
 				allocator_type get_allocator() const { return tree.get_allocator(); }
+
+			template<typename _Key, typename _T, typename _Compare, typename _Alloc>
+				friend inline bool	operator==(const map<_Key, _T, _Compare, _Alloc> &lhs, const map<_Key, _T, _Compare, _Alloc> &rhs);
+			template<typename _Key, typename _T, typename _Compare, typename _Alloc>
+				friend inline bool	operator<(const map<_Key, _T, _Compare, _Alloc> &lhs, const map<_Key, _T, _Compare, _Alloc> &rhs);
 		};
 
 	// Non member functions overload

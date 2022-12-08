@@ -68,7 +68,6 @@ namespace ft
 					return *this;
 				}
 				reference			operator[](difference_type n) const { return *(*this + n); }
-
 		};
 
 	// Non member functions overload

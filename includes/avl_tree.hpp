@@ -5,6 +5,7 @@
 # include "pair.hpp"
 # include "reverse_iterator.hpp"
 # include "avl_tree_iterator.hpp"
+# include "avl_tree_rebalance.hpp"
 # include "equal.hpp"
 # include "lexicographical_compare.hpp"
 
@@ -40,7 +41,7 @@ namespace ft
 				allocator_type		_allocator;
 				Node_allocator		_node_allocator;
 				size_t				_node_count;
-				Node				_header;
+				Avl_tree_node<Val>	_header;
 
 				Node	_create_node(const value_type& val)
 				{
@@ -74,8 +75,8 @@ namespace ft
 				Const_Node	_leftmost() const	{ return _header.left_child; }
 				Node&		_rightmost()		{ return _header.right_child; }
 				Const_Node	_rightmost() const	{ return _header.right_child; }
-				Node		rightmost()			{ return &_header; }
-				Const_Node	rightmost() const	{ return &_header; }
+				Node		_end()				{ return &_header; }
+				Const_Node	_end() const		{ return &_header; }
 
 			private:
 				Node	_copy(Const_Node src, Node parent)
@@ -106,7 +107,7 @@ namespace ft
 
 				Node	_copy(const Avl_tree& src)
 				{
-					Node _root = _copy(src._root(), NULL);
+					Node _root = _copy(src._root(), _end());
 
 					_leftmost() = _root->minimum();
 					_rightmost() = _root->maximum();
@@ -168,8 +169,8 @@ namespace ft
 
 				iterator				begin()			{ return iterator(_leftmost()); }
 				const_iterator			begin() const	{ return const_iterator(_leftmost()); }
-				iterator				end()			{ return iterator(rightmost()); }
-				const_iterator			end() const		{ return const_iterator(rightmost()); }
+				iterator				end()			{ return iterator(_end()); }
+				const_iterator			end() const		{ return const_iterator(_end()); }
 				reverse_iterator		rbegin()		{ return reverse_iterator(end()); }
 				const_reverse_iterator	rbegin() const	{ return const_reverse_iterator(end()); }
 				reverse_iterator		rend()			{ return reverse_iterator(begin()); }
@@ -188,7 +189,7 @@ namespace ft
 				{
 					typedef pair<Node, Node> Result;
 					Node	x = _root();
-					Node	y = rightmost();
+					Node	y = _end();
 
 					iterator	j = find(key);
 					if (j != end())
@@ -204,48 +205,45 @@ namespace ft
 					return Result(x, y);
 				}
 
-				pair<Node, Node>	_get_insert_hint_pos(const_iterator pos, const key_type& key)
+				pair<Node, Node>	_get_insert_hint_pos(iterator pos, const key_type& key)
 				{
 					typedef pair<Node, Node> Result;
-					iterator	it_pos = pos._const_cast();
 
-					if (it_pos.node == rightmost())
+					if (pos.node == _end())
 					{
 						if (size() > 0 && _key_comp(_rightmost()->key(), key))
 							return Result(NULL, _rightmost());
 						else
 							return _get_insert_unique_pos(key);
 					}
-					else if (_key_comp(key, it_pos.node->key()))
+					else if (_key_comp(key, pos.node->key()))
 					{
-						if (it_pos.node == _leftmost())	
+						if (pos.node == _leftmost())	
 							return Result(_leftmost(), _leftmost());
 
-						iterator before = it_pos;
+						iterator before = pos;
 						--before;
 						if (_key_comp(before.node->key(), key))
 						{
-							// if (before.node->right_child == NULL)
-							if (before->right_child == NULL)
+							if (before.node->right_child == NULL)
 								return Result(NULL, before.node);
 							else
-								return Result(it_pos.node, it_pos.node);
+								return Result(pos.node, pos.node);
 						}
 						else
 							return _get_insert_unique_pos(key);
 					}
-					else if (_key_comp(it_pos.node->key(), key))
+					else if (_key_comp(pos.node->key(), key))
 					{
-						if (it_pos.node == _rightmost())
+						if (pos.node == _rightmost())
 							return Result(NULL, _rightmost());
 
-						iterator after = it_pos;
+						iterator after = pos;
 						++after;
 						if (_key_comp(key, after.node->key()))
 						{
-							// if (it_pos.node->right_child == NULL)
-							if (it_pos.node->right_child == NULL)
-								return Result(NULL, it_pos.node);
+							if (pos.node->right_child == NULL)
+								return Result(NULL, pos.node);
 							else
 								return Result(after.node, after.node);
 						}
@@ -253,7 +251,7 @@ namespace ft
 							return _get_insert_unique_pos(key);
 					}
 					else
-						return Result(it_pos.node, NULL);
+						return Result(pos.node, NULL);
 				}
 
 				iterator	_insert(Node x, Node parent, const value_type& val)
@@ -265,10 +263,10 @@ namespace ft
 					node->right_child = NULL;
 					node->height = 1;
 
-					if (x != 0 || parent == rightmost() || _key_comp(val.first, parent->key)) // insert left
+					if (x != 0 || parent == _end() || _key_comp(val.first, parent->key())) // insert left
 					{
 						parent->left_child = node;
-						if (parent == rightmost())
+						if (parent == _end())
 						{
 							_header.parent = node;
 							_header.right_child = node;
@@ -279,10 +277,10 @@ namespace ft
 					else // insert right
 					{
 						parent->right_child = node;
-						if (parent == rightmost())
-							rightmost() = node;
+						if (parent == _rightmost())
+							_rightmost() = node;
 					}
-					Avl_tree_rebalance_after_insert(node, _root());
+					Avl_tree_rebalance_after_insert(node, _header);
 					++_node_count;
 					return iterator(node);
 				}
@@ -297,7 +295,7 @@ namespace ft
 					return pair<iterator, bool>(iterator(result.first), false);
 				}
 
-				iterator	insert_hint(const_iterator pos, const value_type& val)
+				iterator	insert_hint(iterator pos, const value_type& val)
 				{
 					pair<Node, Node>	res = _get_insert_hint_pos(pos, val.first);
 					
@@ -316,35 +314,47 @@ namespace ft
 			private:
 				void	erase_aux(const_iterator pos)
 				{
-					Node	node_to_erase = pos.node;
+					Node	node_to_erase = const_cast<Node>(pos.node);
 					Node 	parent = node_to_erase->parent;
 					Node	successor = NULL;
+					Node	node_to_rebalance = parent;
 
 					if (node_to_erase->left_child)
-						successor = node_to_erase->left_child->maximum();
+					{
+						successor = node_to_erase->left_child->maximum();	// successor = le plus grand fils de gauche de node_to_erase (il a peut être un fils de gauche, il n'a pas de fils de droite)
+
+						if (successor != node_to_erase->left_child)	// si successor n'est pas le fils direct de node_to_erase
+						{
+							node_to_rebalance = successor->parent;
+
+							successor->parent->right_child = successor->left_child; // le fils de gauche de successor devient le fils de droite du père de successor
+							if (successor->left_child)
+								successor->left_child->parent = successor->parent;
+
+							successor->left_child = node_to_erase->left_child;		// le fils de gauche de node_to_erase devient le fils de gauche de successor
+							node_to_erase->left_child->parent = successor;
+						}
+
+						successor->right_child = node_to_erase->right_child;		// le fils de droite de node_to_erase devient le fils de droite de successor
+						node_to_erase->right_child->parent = successor;
+					}
 					else if (node_to_erase->right_child)
-						successor = node_to_erase->right_child;
-
-					Node const node_to_rebalance;
-					if (node_to_erase->left_child)
-						node_to_rebalance = successor->parent;
-					else
-						node_to_rebalance = parent;
-
-					iterator it = node_to_erase;
-					if (node_to_erase == _leftmost())
-						_leftmost() = *(++it);
-					else if (node_to_erase == _rightmost())
-						_rightmost() = *(--it);
-					if (node_to_erase == _root())
-						_root() = successor;
-
+						successor = node_to_erase->right_child;	// successor = le fils de droite de node_to_erase (node_to_erase n'a pas de fils de gauche)
+					
+					if (successor)									// successor devient le fils du père de node_to_erase
+						successor->parent = node_to_erase->parent;
 					if (node_to_erase == parent->left_child)
 						parent->left_child = successor;
-					else
+					else if (node_to_erase == parent->right_child)
 						parent->right_child = successor;
-					if (successor)
-						successor->parent = parent;
+
+					iterator it(node_to_erase);
+					if (node_to_erase == _leftmost())
+						_leftmost() = (++it).node;
+					else if (node_to_erase == _rightmost())
+						_rightmost() = (--it).node;
+					if (node_to_erase == _root())
+						_root() = successor;
 
 					Avl_tree_rebalance_after_erase(node_to_rebalance, _header);
 
@@ -357,8 +367,10 @@ namespace ft
 					if (first == begin() && last == end())
 						clear();
 					else
+					{
 						while (first != last)
 							erase_aux(first++);
+					}
 				}
 
 			public:
@@ -368,7 +380,7 @@ namespace ft
 				size_type	erase(const key_type& key)
 				{
 					iterator pos = find(key);
-					if (pos == rightmost())
+					if (pos == end())
 						return 0;
 					erase_aux(pos);
 					return 1;
@@ -377,12 +389,35 @@ namespace ft
 				void		erase(iterator first, iterator last)				{ erase_aux(first, last); }
 				void		erase(const_iterator first, const_iterator last)	{ erase_aux(first, last); }
 
+			private:
+				void	_move_data(Avl_tree& from)
+				{
+					_header.parent = from._header.parent;
+					_header.left_child = from._header.left_child;
+					_header.right_child = from._header.right_child;
+					_header.parent->parent = &_header;
+					_node_count = from._node_count;
+					from._reset();
+				}
+
+			public:
 				void	swap(Avl_tree& src)
 				{
-					std::swap(_root(),src._root());
-					std::swap(_leftmost(),src._leftmost());
-					std::swap(_rightmost(),src._rightmost());
-					std::swap(_node_count, src._node_count);
+					if (_root() == NULL)
+					{
+						if (src._root() != NULL)
+							_move_data(src);
+					}
+					else if (src._root() == NULL)
+						src._move_data(*this);
+					else
+					{
+						std::swap(_root(),src._root());
+						std::swap(_leftmost(),src._leftmost());
+						std::swap(_rightmost(),src._rightmost());
+						std::swap(_root()->parent, src._root()->parent);
+						std::swap(_node_count, src._node_count);
+					}
 					std::swap(_key_comp, src._key_comp);
 					std::swap(_allocator, src._allocator);
 					std::swap(_node_allocator, src._node_allocator);
@@ -430,7 +465,7 @@ namespace ft
 				iterator		lower_bound(const key_type& key)
 				{
 					Node current = _root();
-					Node result = end();
+					Node result = _end();
 
 					while (current)
 					{
@@ -448,7 +483,7 @@ namespace ft
 				const_iterator	lower_bound(const key_type& key) const
 				{
 					Const_Node current = _root();
-					Const_Node result = end();
+					Const_Node result = _end();
 
 					while (current)
 					{
@@ -466,7 +501,7 @@ namespace ft
 				iterator		upper_bound(const key_type& key)
 				{
 					Node current = _root();
-					Node result = end();
+					Node result = _end();
 
 					while (current)
 					{
@@ -484,7 +519,7 @@ namespace ft
 				const_iterator	upper_bound(const key_type& key) const
 				{
 					Const_Node current = _root();
-					Const_Node result = end();
+					Const_Node result = _end();
 
 					while (current)
 					{
@@ -499,23 +534,9 @@ namespace ft
 					return const_iterator(result);
 				}
 
-				pair<iterator, iterator>				equal_range(const key_type& key)
-				{
-					iterator	it = upper_bound(key);
+				pair<iterator, iterator>				equal_range(const key_type& key) { return (make_pair(lower_bound(key), upper_bound(key))); }
 
-					if (key == it.node->key())
-						return make_pair(it, ++it);
-					return make_pair(it, it);
-				}
-
-				pair<const_iterator, const_iterator>	equal_range(const key_type& key) const
-				{
-					const_iterator	it = upper_bound(key);
-
-					if (key == it.node->key())
-						return make_pair(it, ++it);
-					return make_pair(it, it);
-				}
+				pair<const_iterator, const_iterator>	equal_range(const key_type& key) const { return (make_pair(lower_bound(key), upper_bound(key))); }
 
 	// Allocator
 	
