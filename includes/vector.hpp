@@ -48,8 +48,8 @@ namespace ft
 					_end_of_storage = _end;
 				}
 
-				template <class InputIterator>
-					vector (InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type(), typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type* = NULL) : _allocator(alloc) {
+				template <class InputIterator, typename = typename enable_if<!is_integral<InputIterator>::value, void>::type>
+					vector (InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type()) : _allocator(alloc) {
 						InputIterator tmp = first;
 						size_type i = 0;
 
@@ -176,8 +176,8 @@ namespace ft
 
 	// Modifiers
 
-				template <class InputIterator>
-					void assign (InputIterator first, InputIterator last, typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type* = NULL) {
+				template <class InputIterator, typename = typename enable_if<!is_integral<InputIterator>::value, void>::type>
+					void assign (InputIterator first, InputIterator last) {
 						InputIterator tmp = first;
 						size_type i = 0;
 
@@ -286,8 +286,8 @@ namespace ft
 					}
 				};
 
-				template <class InputIterator>
-					void insert (iterator position, InputIterator first, InputIterator last, typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type* = NULL) {
+				template <class InputIterator, typename = typename enable_if<!is_integral<InputIterator>::value, void>::type>
+					void insert (iterator position, InputIterator first, InputIterator last) {
 						if (position == end())
 						{
 							for (; first != last; ++first)
