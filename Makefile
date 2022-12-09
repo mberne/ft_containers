@@ -9,15 +9,13 @@ FT_OUT		=		ft_tests.out
 
 #~~~~ Paths ~~~~#
 
+PATH_SRC	=		srcs/
 PATH_INC	=		includes/
 PATH_OUT	=		test_outputs/
 
 #~~~~ Sources ~~~~#
  
-SRCS		=		main.cpp			\
-					tests_vector.cpp	\
-					tests_stack.cpp		\
-					tests_map.cpp
+SRCS		=		$(addprefix $(PATH_SRC), main.cpp tests_vector.cpp tests_stack.cpp tests_map.cpp)
 
 #~~~~ Includes ~~~~#
 
@@ -36,7 +34,6 @@ RM			=		rm -rf
 #~~~~ Main Rules ~~~~#
 
 all :			$(STD_OUT) $(FT_OUT)
-
 
 $(STD_OUT) :	$(SRCS) $(INCS)
 				@mkdir -p $(PATH_OUT)
