@@ -62,7 +62,8 @@ namespace ft
 					current = parent;
 					parent = parent->parent;
 				}
-				current = parent;
+				if (current->right_child != parent)
+					current = parent;
 			}
 			return current;
 		}

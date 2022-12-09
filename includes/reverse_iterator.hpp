@@ -18,7 +18,7 @@ namespace ft
 				typedef typename traits_type::reference			reference;
 				typedef Iterator								iterator_type;
 
-			// Constructors
+	// Constructors
 
 				reverse_iterator() {}
 				explicit reverse_iterator (iterator_type it) : current(it) {}
@@ -26,7 +26,7 @@ namespace ft
 				template<typename It>
 					reverse_iterator(const reverse_iterator<It>& src) : current(src.base()) {}
 
-			// Operator =
+	// Operator =
 
 				reverse_iterator&	operator=(const reverse_iterator& rhs) {
 					if (this != &rhs)
@@ -34,7 +34,7 @@ namespace ft
 					return *this;
 				}
 			
-			// Member functions
+	// Member functions
 
 				const iterator_type	base() const { return current; }
 				reference			operator*() const { iterator_type tmp = current; return *--tmp; }

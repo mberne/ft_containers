@@ -22,14 +22,14 @@ namespace ft
 				typedef typename traits_type::reference			reference;
 				typedef typename traits_type::iterator_category	iterator_category;
 
-			// Constructors
+	// Constructors
 
 				vector_iterator() {}
 				vector_iterator(const T &src) : current(src) {}
 				template<typename T2>
     				vector_iterator(const vector_iterator<T2>& src) : current(src.base()) {}
 
-			// Member functions
+	// Member functions
 
 				reference 				operator*() const { return *current; }
 				pointer					operator->() const { return current; }
@@ -60,6 +60,8 @@ namespace ft
 				reference 				operator[](difference_type n) const { return *(current + n); }
 				const  iterator_type	&base() const { return current; }
 		};
+
+	// Non member functions overload
 
 		template<typename ItL, typename ItR>
 			inline bool		operator==(const vector_iterator<ItL>& lhs, const vector_iterator<ItR>& rhs) { return lhs.base() == rhs.base(); }

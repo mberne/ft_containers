@@ -23,10 +23,6 @@ namespace ft
 		struct is_integral_check<bool> : public true_type {};
 	template <>
 		struct is_integral_check<char> : public true_type {};
-	// template <>
-	// 	struct is_integral_check<char16_t> : public true_type {};
-	// template <>
-	// 	struct is_integral_check<char32_t> : public true_type {};
 	template <>
 		struct is_integral_check<wchar_t> : public true_type {};
 	template <>
@@ -49,7 +45,6 @@ namespace ft
 		struct is_integral_check<unsigned long int> : public true_type {};
 	template <>
 		struct is_integral_check<unsigned long long int> : public true_type {};
-
 
 	template<class T>
 		struct remove_cv { typedef T type; };

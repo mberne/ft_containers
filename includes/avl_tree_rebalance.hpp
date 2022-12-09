@@ -79,7 +79,7 @@ namespace ft
 		}
 
 	template<typename T>
-		void	Avl_tree_rebalance_after_insert(Avl_tree_node<T>* z, Avl_tree_node<T> &header) throw ()
+		void	Avl_tree_rebalance_after_insert(Avl_tree_node<T>* z, Avl_tree_node<T> &header)
 		{
 			Avl_tree_node<T>*	&root = header.parent;
 			Avl_tree_node<T>*	end = &header;
@@ -116,7 +116,7 @@ namespace ft
 					Avl_tree_rotate_left(z, root);
 					z = y->parent;
 				}
-				else // Enlever le else pour l'opti ?
+				else
 				{
 					x = y;
 					y = z;
@@ -127,7 +127,7 @@ namespace ft
 		}
 		
 	template<typename T>
-		void	Avl_tree_rebalance_after_erase(Avl_tree_node<T>* z, Avl_tree_node<T> &header) throw ()
+		void	Avl_tree_rebalance_after_erase(Avl_tree_node<T>* z, Avl_tree_node<T> &header)
 		{
 			Avl_tree_node<T>*	&root = header.parent;
 			Avl_tree_node<T>*	end = &header;

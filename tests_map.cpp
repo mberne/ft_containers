@@ -157,6 +157,12 @@ void	test_map()
 
 			cout << "~~ Iterator ~~" << endl;
 			{
+				ft::map<int, char>			c_int_char;
+				for(ft::map<int, char>::iterator it = c_int_char.begin(); it != c_int_char.end(); it++)
+					cout << it->first << endl;
+				c_int_char.insert(ft::make_pair(42, 'f'));
+				for(ft::map<int, char>::iterator it = c_int_char.begin(); it != c_int_char.end(); it++)
+					cout << it->first << endl;
 				ft::map<char, int>			c_char_int;
 				fill_c(c_char_int);
 				ft::map<char, int>::iterator	it_char_int; 										// X a;
@@ -175,6 +181,12 @@ void	test_map()
 
 			cout << "~~ Reverse Iterator ~~" << endl;
 			{
+				ft::map<int, char>			c_int_char;
+				for(ft::map<int, char>::const_iterator it = c_int_char.begin(); it != c_int_char.end(); it++)
+					cout << it->first << endl;
+				c_int_char.insert(ft::make_pair(42, 'f'));
+				for(ft::map<int, char>::const_iterator it = c_int_char.begin(); it != c_int_char.end(); it++)
+					cout << it->first << endl;
 				ft::map<char, int>			c_char_int;
 				fill_c(c_char_int);
 				ft::map<char, int>::reverse_iterator	it_char_int; 								// X a;
@@ -212,21 +224,11 @@ void	test_map()
 
 			cout << "~~ operator[] and at() ~~" << endl;
 			for(char c = 'a'; c < 'f'; c++)
-			{
 				cout << c_char_int[c] << endl;
-				// cout << c_char_int.at(c) << "|" << c_char_int_const.at(c) << endl;
-			}
 			for(int i = 0; i < 5; i++)
-			{
 				cout << c_int_str[i] << endl;
-				// cout << c_int_str.at(i) << endl;
-			}
 			cout << c_int_str[100] << endl;
 			cout << c_char_int['e'] << endl;
-			// try { cout << c_int_str.at(100); }
-			// catch(const std::out_of_range& e) { cout << "exception thrown" << endl; }
-			// try { cout << c_char_int.at('e'); }
-			// catch(const std::out_of_range& e) { cout << "exception thrown" << endl; }
 		}
 		//~~ Modifiers
 		{
@@ -296,7 +298,7 @@ void	test_map()
 			c_single.erase(c_single.find(70));		print_c(c_single);
 			c_single.erase(c_single.find(60));		print_c(c_single);
 			c_single.erase(c_single.find(75));		print_c(c_single);
-			c_single.erase(c_single.find(320));		print_c(c_single); // bug supprimer root
+			c_single.erase(c_single.find(320));		print_c(c_single);
 			c_single.erase(0);		print_c(c_single);
 			c_single.erase(640);	print_c(c_single);
 			c_single.erase(c_single.find(180), c_single.find(480));	print_c(c_single);
@@ -304,45 +306,47 @@ void	test_map()
 		//~~ Operations
 			cout << "~~ find() and count() ~~" << endl;
 			cout << (c_single.find(10) != c_single.end()) << "|" << (*c_single.find(10)).first << "|" << (*c_single.find(10)).second << "|" << c_single.count(10) << endl;
-			cout << (c_single.find(300) != c_single.end()) << "|" << (*c_single.find(300)).first << "|" << (*c_single.find(300)).second << "|" << c_single.count(300) << endl;
+			cout << (c_single.find(165) != c_single.end()) << "|" << (*c_single.find(165)).first << "|" << (*c_single.find(165)).second << "|" << c_single.count(165) << endl;
 			cout << (c_single.find(630) != c_single.end()) << "|" << (*c_single.find(630)).first << "|" << (*c_single.find(630)).second << "|" << c_single.count(630) << endl;
 			cout << (c_single.find(100) != c_single.end()) << "|" << (*c_single.find(100)).first << "|" << (*c_single.find(100)).second << "|" << c_single.count(100) << endl;
 			cout << (c_single.find(200) != c_single.end()) << "|" << c_single.count(200) << endl;
 			cout << (c_single.find(300) != c_single.end()) << "|" << c_single.count(300) << endl;
 			cout << (c_single.find(520) != c_single.end()) << "|" << (*c_single.find(520)).first << "|" << (*c_single.find(520)).second << "|" << c_single.count(520) << endl;
+			cout << (c_single.find(0) != c_single.end())<< "|" << c_single.count(0) << endl;
+			cout << (c_single.find(640) != c_single.end())<< "|" << c_single.count(640) << endl;
 
 			cout << "~~ lower_bound() ~~" << endl;
 			cout << (c_single.lower_bound(10) != c_single.end()) << "|" << (*c_single.lower_bound(10)).first << "|" << (*c_single.lower_bound(10)).second << endl;
-			cout << (c_single.lower_bound(300) != c_single.end()) << "|" << (*c_single.lower_bound(300)).first << "|" << (*c_single.lower_bound(300)).second << endl;
+			cout << (c_single.lower_bound(165) != c_single.end()) << "|" << (*c_single.lower_bound(165)).first << "|" << (*c_single.lower_bound(165)).second << endl;
 			cout << (c_single.lower_bound(630) != c_single.end()) << "|" << (*c_single.lower_bound(630)).first << "|" << (*c_single.lower_bound(630)).second << endl;
 			cout << (c_single.lower_bound(100) != c_single.end()) << "|" << (*c_single.lower_bound(100)).first << "|" << (*c_single.lower_bound(100)).second << endl;
 			cout << (c_single.lower_bound(200) != c_single.end()) << "|" << (*c_single.lower_bound(200)).first << "|" << (*c_single.lower_bound(200)).second << endl;
 			cout << (c_single.lower_bound(300) != c_single.end()) << "|" << (*c_single.lower_bound(300)).first << "|" << (*c_single.lower_bound(300)).second << endl;
 			cout << (c_single.lower_bound(520) != c_single.end()) << "|" << (*c_single.lower_bound(520)).first << "|" << (*c_single.lower_bound(520)).second << endl;
 			cout << (c_single.lower_bound(0) != c_single.end()) << "|" << endl;
-			cout << (c_single.lower_bound(630) != c_single.end()) << "|" << endl;
+			cout << (c_single.lower_bound(640) != c_single.end()) << "|" << endl;
 
 			cout << "~~ upper_bound() ~~" << endl;
 			cout << (c_single.upper_bound(10) != c_single.end()) << "|" << (*c_single.upper_bound(10)).first << "|" << (*c_single.upper_bound(10)).second << endl;
-			cout << (c_single.upper_bound(300) != c_single.end()) << "|" << (*c_single.upper_bound(300)).first << "|" << (*c_single.upper_bound(300)).second << endl;
-			cout << (c_single.upper_bound(630) != c_single.end()) << "|" << (*c_single.upper_bound(630)).first << "|" << (*c_single.upper_bound(630)).second << endl;
+			cout << (c_single.upper_bound(165) != c_single.end()) << "|" << (*c_single.upper_bound(165)).first << "|" << (*c_single.upper_bound(165)).second << endl;
+			cout << (c_single.upper_bound(630) != c_single.end()) << endl;
 			cout << (c_single.upper_bound(100) != c_single.end()) << "|" << (*c_single.upper_bound(100)).first << "|" << (*c_single.upper_bound(100)).second << endl;
 			cout << (c_single.upper_bound(200) != c_single.end()) << "|" << (*c_single.upper_bound(200)).first << "|" << (*c_single.upper_bound(200)).second << endl;
 			cout << (c_single.upper_bound(300) != c_single.end()) << "|" << (*c_single.upper_bound(300)).first << "|" << (*c_single.upper_bound(300)).second << endl;
 			cout << (c_single.upper_bound(520) != c_single.end()) << "|" << (*c_single.upper_bound(520)).first << "|" << (*c_single.upper_bound(520)).second << endl;
 			cout << (c_single.upper_bound(0) != c_single.end()) << "|" << endl;
-			cout << (c_single.upper_bound(630) != c_single.end()) << "|" << endl;
+			cout << (c_single.upper_bound(640) != c_single.end()) << "|" << endl;
 
 			cout << "~~ equal_range() ~~" << endl;
 			cout << (c_single.equal_range(10).first != c_single.equal_range(10).second) << "|" << (*c_single.equal_range(10).first).first << "|" << (*c_single.equal_range(10).first).second << endl;
-			cout << (c_single.equal_range(300).first != c_single.equal_range(300).second) << "|" << (*c_single.equal_range(300).first).first << "|" << (*c_single.equal_range(300).first).second << endl;
+			cout << (c_single.equal_range(165).first != c_single.equal_range(165).second) << "|" << (*c_single.equal_range(165).first).first << "|" << (*c_single.equal_range(165).first).second << endl;
 			cout << (c_single.equal_range(630).first != c_single.equal_range(630).second) << "|" << (*c_single.equal_range(630).first).first << "|" << (*c_single.equal_range(630).first).second << endl;
 			cout << (c_single.equal_range(100).first != c_single.equal_range(100).second) << "|" << (*c_single.equal_range(100).first).first << "|" << (*c_single.equal_range(100).first).second << endl;
 			cout << (c_single.equal_range(200).first != c_single.equal_range(200).second) << "|" << (*c_single.equal_range(200).first).first << "|" << (*c_single.equal_range(200).first).second << endl;
 			cout << (c_single.equal_range(300).first != c_single.equal_range(300).second) << "|" << (*c_single.equal_range(300).first).first << "|" << (*c_single.equal_range(300).first).second << endl;
 			cout << (c_single.equal_range(520).first != c_single.equal_range(520).second) << "|" << (*c_single.equal_range(520).first).first << "|" << (*c_single.equal_range(520).first).second << endl;
 			cout << (c_single.equal_range(0).first != c_single.equal_range(0).second) << "|" << (c_single.end() != c_single.equal_range(0).second) << endl;
-			cout << (c_single.equal_range(630).first != c_single.equal_range(630).second) << "|" << (c_single.end() != c_single.equal_range(630).second) << endl;
+			cout << (c_single.equal_range(640).first != c_single.equal_range(630).second) << "|" << (c_single.end() != c_single.equal_range(630).second) << endl;
 
 		//~~ Modifiers
 			cout << "~~ clear() and swap() ~~" << endl;

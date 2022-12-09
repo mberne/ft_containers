@@ -11,8 +11,6 @@
 
 namespace ft
 {
-	// AVL tree class
-
 	template<typename Key, typename Val, typename Compare, typename Alloc = std::allocator<Val> >
 		class Avl_tree
 		{
@@ -311,8 +309,7 @@ namespace ft
 							insert_hint(end(), *first);
 					}
 
-			private:
-				void	erase_aux(const_iterator pos)
+				void		erase(iterator pos)
 				{
 					Node	node_to_erase = const_cast<Node>(pos.node);
 					Node 	parent = node_to_erase->parent;
@@ -362,32 +359,25 @@ namespace ft
 					--_node_count;
 				}
 
-				void	erase_aux(const_iterator first, const_iterator last)
+				size_type	erase(const key_type& key)
+				{
+					iterator pos = find(key);
+					if (pos == end())
+						return 0;
+					erase(pos);
+					return 1;
+				}
+
+				void		erase(iterator first, iterator last)
 				{
 					if (first == begin() && last == end())
 						clear();
 					else
 					{
 						while (first != last)
-							erase_aux(first++);
+							erase(first++);
 					}
 				}
-
-			public:
-				void		erase(iterator pos)			{ erase_aux(pos); }
-				void		erase(const_iterator pos)	{ erase_aux(pos); }
-
-				size_type	erase(const key_type& key)
-				{
-					iterator pos = find(key);
-					if (pos == end())
-						return 0;
-					erase_aux(pos);
-					return 1;
-				}
-
-				void		erase(iterator first, iterator last)				{ erase_aux(first, last); }
-				void		erase(const_iterator first, const_iterator last)	{ erase_aux(first, last); }
 
 			private:
 				void	_move_data(Avl_tree& from)
@@ -541,69 +531,6 @@ namespace ft
 	// Allocator
 	
 				allocator_type			get_allocator() const		{ return allocator_type(_allocator); }
-
-	// Affichage arbre
-
-		// public:
-        //     struct Trunk
-        //     {
-        //         Trunk *prev;
-        //         std::string str;
-            
-        //         Trunk(Trunk *prev, std::string str)
-        //         {
-        //             this->prev = prev;
-        //             this->str = str;
-        //         }
-        //     };
-
-        //     void showTrunks(Trunk *p)
-        //     {
-        //         if (p == nullptr)
-        //             return;
-        //         showTrunks(p->prev);
-        //         std::cout << p->str;
-        //     }
-
-        //     void printTree(pointer _root, Trunk *prev, bool isLeft)
-        //     {
-        //         if (_root == nullptr)
-        //             return;
-        //         std::string prev_str = "    ";
-        //         Trunk *trunk = new Trunk(prev, prev_str);
-            
-        //         printTree(static_cast<pointer>(_root->right_child), trunk, true);
-            
-        //         if (!prev)
-        //             trunk->str = "———";
-        //         else if (isLeft)
-        //         {
-        //             trunk->str = "┌———";
-        //             prev_str = "    |";
-        //         }
-        //         else {
-        //             trunk->str = "└──";
-        //             prev->str = prev_str;
-        //         }
-            
-        //         showTrunks(trunk);
-        //         if (_root->is_black == false)
-        //             std::cout << "\033[31m" << _root->pair.first << "\033[0m" << std::endl;
-        //         else
-        //             std::cout << _root->pair.first << std::endl;
-                    
-        //         if (prev) {
-        //             prev->str = prev_str;
-        //         }
-        //         trunk->str = "    |";
-            
-        //         printTree(static_cast<pointer>(_root->left_child), trunk, false);
-        //     }
-
-        //     void print()
-        //     {
-        //         printTree(static_cast<pointer>(_root), NULL, false);
-        //     }
 		};
 
 	// Non member functions overload
