@@ -16,9 +16,9 @@
 using std::cout;
 using std::endl;
 
-void	test_vector();
-void	test_stack();
-void	test_map();
+// void	test_vector();
+// void	test_stack();
+// void	test_map();
 
 int main()
 {
@@ -224,9 +224,9 @@ int main()
 	for(it = str_vector_5.begin(); it < str_vector_5.end(); ++it)
 		cout << *it << endl;
 
-	cout << endl << "----------Tester----------" << endl << endl;
+	// cout << endl << "----------Tester----------" << endl << endl;
 
-	test_vector();
+	// test_vector();
 
 	cout << endl << "----------Stack----------" << endl << endl;
 
@@ -309,9 +309,9 @@ int main()
 	deque_stack.pop();
 	cout << deque_stack.top() << endl;
 
-	cout << endl << "----------Tester----------" << endl << endl;
+	// cout << endl << "----------Tester----------" << endl << endl;
 
-	test_stack();
+	// test_stack();
 
 	cout << endl << "----------Map----------" << endl << endl;
 
@@ -482,9 +482,9 @@ int main()
 	for(ft::map<int, char>::iterator it = map_int_char_again.begin(); it != map_int_char_again.end(); ++it)
 		cout << "Key : " << it->first << " | Value : " << it->second << endl;
 
-	cout << endl << "----------Tester----------" << endl << endl;
+	// cout << endl << "----------Tester----------" << endl << endl;
 
-	test_map();
+	// test_map();
 
 	return (0);
 }

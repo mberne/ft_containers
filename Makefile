@@ -15,7 +15,7 @@ PATH_OUT	=		test_outputs/
 
 #~~~~ Sources ~~~~#
  
-SRCS		=		$(addprefix $(PATH_SRC), main.cpp tests_vector.cpp tests_stack.cpp tests_map.cpp)
+SRCS		=		$(addprefix $(PATH_SRC), main.cpp)
 
 #~~~~ Includes ~~~~#
 
