@@ -168,6 +168,7 @@ void	test_map()
 				ft::map<char, int>::iterator	it_char_int; 										// X a;
 				it_char_int = c_char_int.begin();													// b = a;
 				ft::map<char, int>::iterator	it_char_int_copy(it_char_int);						// X a(b);
+				(void)it_char_int_copy;
 				cout << (*it_char_int).first << "|" << (*it_char_int).second << endl;				// *a
 				cout << it_char_int->first << "|" << it_char_int->second << endl;					// a->m
 				cout << (it_char_int == ++it_char_int) << endl;										// ++a
@@ -192,6 +193,7 @@ void	test_map()
 				ft::map<char, int>::reverse_iterator	it_char_int; 								// X a;
 				it_char_int = c_char_int.rbegin();													// b = a;
 				ft::map<char, int>::reverse_iterator	it_char_int_copy(it_char_int);				// X a(b);
+				(void)it_char_int_copy;
 				cout << (*it_char_int).first << "|" << (*it_char_int).second << endl;				// *a
 				cout << it_char_int->first << "|" << it_char_int->second << endl;					// a->m
 				cout << (it_char_int == ++it_char_int) << endl;										// ++a

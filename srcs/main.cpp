@@ -478,7 +478,7 @@ int main()
 
 	cout << "Constructor with iterators." << endl;
 
-	ft::map<int, char> map_int_char_again(map_int_char_compare.begin(), ++map_int_char_compare.find(50));
+	ft::map<int, char> map_int_char_again(map_int_char_compare.begin(), map_int_char_compare.find(50));
 	for(ft::map<int, char>::iterator it = map_int_char_again.begin(); it != map_int_char_again.end(); ++it)
 		cout << "Key : " << it->first << " | Value : " << it->second << endl;
 

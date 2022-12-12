@@ -45,14 +45,14 @@ namespace ft
 				{
 					Node	node = _node_allocator.allocate(1);
 
-					try			{ _node_allocator.construct(node->valptr(), val); }
+					try			{ _allocator.construct(node->valptr(), val); }
 					catch(...)	{ _node_allocator.deallocate(node, 1); throw; }
 					return node;
 				}
 
 				void	_destroy_node(Node node)
 				{
-					_node_allocator.destroy(node->valptr());
+					_allocator.destroy(node->valptr());
 					_node_allocator.deallocate(node, 1);
 				}
 
@@ -309,7 +309,8 @@ namespace ft
 							insert_hint(end(), *first);
 					}
 
-				void		erase(iterator pos)
+			private:
+				void _erase_aux(iterator pos)
 				{
 					Node	node_to_erase = const_cast<Node>(pos.node);
 					Node 	parent = node_to_erase->parent;
@@ -359,12 +360,16 @@ namespace ft
 					--_node_count;
 				}
 
+			public:
+				void		erase(iterator pos) 		{ _erase_aux(pos); }
+				void		erase(const_iterator pos)	{ _erase_aux(pos); }
+
 				size_type	erase(const key_type& key)
 				{
 					iterator pos = find(key);
 					if (pos == end())
 						return 0;
-					erase(pos);
+					_erase_aux(pos);
 					return 1;
 				}
 
@@ -375,7 +380,7 @@ namespace ft
 					else
 					{
 						while (first != last)
-							erase(first++);
+							_erase_aux(first++);
 					}
 				}
 
