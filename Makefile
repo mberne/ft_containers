@@ -24,7 +24,7 @@ INCS		=		$(addprefix $(PATH_INC), iterator.hpp iterator_traits.hpp reverse_itera
 #~~~~ Macros ~~~~#
 
 CC			=		c++
-CFLAGS		=		-Wall -Wextra -Werror #-std=c++98
+CFLAGS		=		-Wall -Wextra -Werror -std=c++98
 RM			=		rm -rf
 
 #========================================#
