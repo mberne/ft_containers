@@ -407,7 +407,11 @@ namespace ft
 
 				void	_reallocate(size_type n) {
 					_allocator.deallocate(_begin, capacity());
-					const size_type len = check_len(n, "vector::_reallocate");
+					size_type len;
+					if (capacity() < n)
+						len = n;
+					else
+						len = capacity();
 					_begin = _allocator.allocate(len);
 					_end = _begin;
 					_end_of_storage = _begin + len;
@@ -508,7 +512,12 @@ namespace ft
 				{
 					if (max_size() - size() < n)
 						throw std::length_error(str);
-					const size_type len = size() + (std::max)(size(), n);
+					size_type len;
+                    if (capacity() * 2 < n + size())
+                        len = n + size();
+                    else
+                        len = capacity() * 2;
+					// const size_type len = size() + (std::max)(size(), n);
 					if (len < size() || len > max_size())
 						return max_size();
 					return len;
